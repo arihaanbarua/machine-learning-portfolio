@@ -18,8 +18,14 @@ __pycache__/
 
 # Quarto / rendered output (regenerated from the .qmd source)
 /.quarto/
+/_book/
+/_freeze/
 *.html
 Problem Set 6 Dashboard_files/
 Problem-Set-6-Dashboard_files/
 Files/Problem Set 6 Dashboard_files/
 Files/Problem-Set-6-Dashboard_files/
+
+# Keep tracked PDFs/notebooks in Files/ (negated from any broad rules above)
+!Files/*.pdf
+!Files/*.ipynb

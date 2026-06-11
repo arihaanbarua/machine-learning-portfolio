@@ -1,0 +1,47 @@
+project:
+  type: book
+  execute-dir: project
+  output-dir: _book
+
+book:
+  title: "STAT 380 Portfolio"
+  subtitle: "Statistical Modeling & Machine Learning"
+  author: "Arihaan Barua"
+  date: today
+  search: true
+  repo-url: https://github.com/arihaanbarua/stat380-portfolio
+  repo-actions: [source]
+  sidebar:
+    style: docked
+    collapse-level: 1
+  chapters:
+    - index.qmd
+    - part: "Regression & Statistics (R)"
+      chapters:
+        - chapters/01-ps3-baseball.qmd
+        - chapters/02-ps4-regression.qmd
+        - chapters/03-ps6-models.qmd
+    - part: "Machine Learning (Python)"
+      chapters:
+        - chapters/04-naive-bayes.qmd
+        - chapters/05-neural-network.qmd
+        - chapters/06-random-forest.qmd
+        - chapters/07-roc-kfold.qmd
+        - chapters/08-decision-trees.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+    code-overflow: wrap
+    fig-align: center
+
+execute:
+  freeze: auto
+  warning: false
+  message: false
+  echo: true

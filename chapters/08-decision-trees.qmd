@@ -1,0 +1,153 @@
+# Decision Trees — Medical Diagnosis
+
+```{r}
+#| include: false
+library(reticulate)
+```
+
+```{python}
+#| include: false
+import warnings
+warnings.filterwarnings('ignore')
+
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# ── Breast Cancer Wisconsin Diagnostic (with fallback) ───────────────────────
+try:
+    from ucimlrepo import fetch_ucirepo
+    dt_raw  = fetch_ucirepo(id=17)
+    dt_data = dt_raw.data.original
+    dt_X    = dt_data.drop('Diagnosis', axis=1)
+    dt_y    = dt_data['Diagnosis']
+except Exception:
+    from sklearn.datasets import load_breast_cancer
+    _bc  = load_breast_cancer(as_frame=True)
+    dt_X = _bc.data
+    dt_y = _bc.target.map({0: 'M', 1: 'B'})
+
+dt_X_train, dt_X_test, dt_y_train, dt_y_test = train_test_split(
+    dt_X, dt_y, test_size=0.2, random_state=887
+)
+dt_classes = sorted(dt_y.unique().tolist())
+
+dt_configs = {
+    "Max Depth = 1":          DecisionTreeClassifier(criterion='entropy', max_depth=1,          random_state=887),
+    "Min Samples Split = 10": DecisionTreeClassifier(criterion='entropy', min_samples_split=10, random_state=887),
+    "Min Samples Leaf = 10":  DecisionTreeClassifier(criterion='entropy', min_samples_leaf=10,  random_state=887),
+    "Default (no params)":    DecisionTreeClassifier(criterion='entropy',                       random_state=887),
+}
+
+dt_results = {}
+for name, clf in dt_configs.items():
+    clf.fit(dt_X_train, dt_y_train)
+    preds = clf.predict(dt_X_test)
+    dt_results[name] = {
+        "clf": clf, "preds": preds,
+        "accuracy": round(accuracy_score(dt_y_test, preds), 4),
+        "cm": confusion_matrix(dt_y_test, preds, labels=dt_classes),
+    }
+
+dt_eig_df = pd.DataFrame({
+    "Split Feature":     ["Sender in Contact", 'Subject mentions "IRS"', "Has Attachment"],
+    "EIG (log₂)":        [0.590, 0.091, 0.007],
+    "Entropy Reduction": ["Highest — best split", "Moderate", "Very low — worst split"]
+})
+```
+
+This chapter has two parts: a hand-built **Expected Information Gain (EIG)** calculation showing how a decision tree chooses which feature to split on, and a study of how **hyperparameters** (max depth, minimum samples) affect a tree diagnosing breast cancer from the Wisconsin Diagnostic dataset.
+
+## Expected Information Gain
+
+```{python}
+fig_dt0 = go.Figure(data=[go.Table(
+    header=dict(values=["Split Feature", "EIG (log₂)", "Interpretation"],
+                fill_color="#4e79a7", font=dict(color="white", size=13), align="center"),
+    cells=dict(values=[dt_eig_df["Split Feature"], dt_eig_df["EIG (log₂)"], dt_eig_df["Entropy Reduction"]],
+               fill_color=[["#f0f4f8", "white", "#d4edda"]], align="center", font=dict(size=13))
+)])
+fig_dt0.update_layout(title="Expected Information Gain — Spam Email Decision Tree",
+                      height=230, template="plotly_white")
+fig_dt0.show()
+```
+
+Expected Information Gain (EIG) measures how much a proposed split reduces entropy — the uncertainty in the class labels. **H(S) ≈ 0.991** for the root node (9 samples, 4 spam / 5 not-spam). EIG = H(S) − weighted average entropy after the split. The three candidate split features yield very different EIG values: **Sender in Contact** achieves EIG ≈ 0.590, far outperforming the other two. A split on this feature almost perfectly separates spam from non-spam, while **Has Attachment** (EIG = 0.007) is nearly useless as a split criterion. Decision trees greedily select the feature with the highest EIG at each node, which is why Sender in Contact would be chosen as the root split.
+
+## Hyperparameter Effects
+
+Four decision trees are trained on the breast cancer data with different complexity-control settings, then compared.
+
+::: {.panel-tabset}
+
+### Accuracy Comparison
+
+```{python}
+dt_acc_df = pd.DataFrame({
+    "Configuration": list(dt_results.keys()),
+    "Accuracy":      [dt_results[k]["accuracy"] for k in dt_results]
+})
+best_dt = dt_acc_df.loc[dt_acc_df["Accuracy"].idxmax(), "Configuration"]
+
+fig_dt1 = px.bar(
+    dt_acc_df, x="Configuration", y="Accuracy",
+    color="Accuracy", color_continuous_scale="Blues",
+    text=dt_acc_df["Accuracy"].apply(lambda v: f"{v*100:.1f}%"),
+    title="Decision Tree Accuracy by Configuration — Breast Cancer Wisconsin"
+)
+fig_dt1.update_traces(textposition="outside")
+fig_dt1.update_layout(template="plotly_white", height=430, coloraxis_showscale=False,
+                      yaxis=dict(range=[0.8, 1.0], tickformat=".0%"), xaxis_tickangle=-10)
+fig_dt1.show()
+```
+
+Each bar is the test-set accuracy (80/20 split, random_state=887) for one of the four tree configurations on the Wisconsin Breast Cancer Diagnostic dataset (569 patients, 30 cell nucleus features, binary target: Malignant vs Benign). **Max Depth = 1** severely restricts the tree to a single split — it can only ask one yes/no question, leading to significant underfitting. The other three configurations allow the tree to grow deeper and capture more complex feature interactions. The **Min Samples Split = 10** model achieves the highest accuracy, showing that requiring at least 10 samples before splitting provides a good bias-variance balance for this dataset.
+
+### Confusion Matrices
+
+```{python}
+from plotly.subplots import make_subplots
+
+config_names = list(dt_results.keys())
+fig_dt2 = make_subplots(rows=2, cols=2,
+    subplot_titles=[f"{n}<br>Acc: {dt_results[n]['accuracy']*100:.1f}%" for n in config_names])
+
+positions = [(1,1),(1,2),(2,1),(2,2)]
+for (row, col), name in zip(positions, config_names):
+    cm_val = dt_results[name]["cm"]
+    hm = go.Heatmap(z=cm_val, x=dt_classes, y=dt_classes, colorscale="Blues",
+                    showscale=False, text=cm_val, texttemplate="%{text}", textfont=dict(size=14))
+    fig_dt2.add_trace(hm, row=row, col=col)
+    fig_dt2.update_xaxes(title_text="Predicted", row=row, col=col)
+    fig_dt2.update_yaxes(title_text="True", row=row, col=col)
+
+fig_dt2.update_layout(title_text="Confusion Matrices — Breast Cancer Diagnosis (B=Benign, M=Malignant)",
+                      height=580, template="plotly_white")
+fig_dt2.show()
+```
+
+Four confusion matrices are shown side-by-side — one per tree configuration. Each matrix's rows are true diagnoses (B=Benign, M=Malignant) and columns are predicted diagnoses. Diagonal values are correct classifications; off-diagonal values are errors. In medical diagnosis, **false negatives** (malignant tumors predicted as benign) are especially costly. The Max Depth = 1 tree produces the most false negatives because it can only ask one question about the data. The more flexible trees make fewer errors overall, with Min Samples Split = 10 achieving the best combination of true positives and true negatives.
+
+:::
+
+::: {.callout-tip}
+## Key Findings — Decision Trees
+
+**Dataset:** UCI Breast Cancer Wisconsin Diagnostic (id=17) — 569 patients, 30 features
+**Task:** Binary classification — Malignant (M) vs Benign (B) · Entropy criterion, random_state=887, 80/20 split
+
+| Configuration | Test Accuracy | Notes |
+|---|---|---|
+| Max Depth = 1 | `{python} f"{dt_results['Max Depth = 1']['accuracy']*100:.1f}"`% | Single split — underfits |
+| Min Samples Split = 10 | `{python} f"{dt_results['Min Samples Split = 10']['accuracy']*100:.1f}"`% | **Best model** |
+| Min Samples Leaf = 10 | `{python} f"{dt_results['Min Samples Leaf = 10']['accuracy']*100:.1f}"`% | Strong performance |
+| Default (no params) | `{python} f"{dt_results['Default (no params)']['accuracy']*100:.1f}"`% | May overfit |
+
+- **EIG:** for the spam example, "Sender in Contact" (EIG = 0.590) is the best root split — it reduces entropy the most, nearly perfectly separating spam from non-spam with a single question.
+- **Why Max Depth = 1 is worst:** restricting to one split means the tree can only partition the 30-feature space with a single boundary — fundamentally insufficient for distinguishing the overlapping morphological profiles of benign and malignant tumors.
+- **Why Min Samples Split = 10 wins:** requiring at least 10 samples before any split prevents the tree from creating very small, noisy leaf nodes that memorize training data. This reduces overfitting without sacrificing the flexibility needed to capture real patterns.
+:::

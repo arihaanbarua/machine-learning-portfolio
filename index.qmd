@@ -1,0 +1,43 @@
+# Welcome {.unnumbered}
+
+This book is a portfolio of my work for **STAT 380 — Data Science** at Penn State. It collects three problem sets and five machine-learning assignments into a single, navigable reference, with every figure rebuilt as an **interactive [plotly](https://plotly.com/) visualization** and accompanied by a plain-language explanation of what the analysis is doing and why.
+
+## What's inside
+
+The portfolio is organized into two parts.
+
+### Part I — Regression & Statistics (R)
+
+Built with R, `tidyverse`, `glmnet`, and `FNN`.
+
+| Chapter | Topic | Key methods |
+|---|---|---|
+| [Problem Set 3](chapters/01-ps3-baseball.qmd) | Baseball career records | `dplyr` aggregation, grouping & filtering |
+| [Problem Set 4](chapters/02-ps4-regression.qmd) | Insurance, used cars & NOVA housing | Nested model comparison, validation metrics (MSE/RMSE/MAE), multiple regression |
+| [Problem Set 6](chapters/03-ps6-models.qmd) | MLB salary, kNN & housing | LASSO, backward elimination, k-nearest-neighbors regression |
+
+### Part II — Machine Learning (Python)
+
+Built with Python, `scikit-learn`, and `plotly`.
+
+| Chapter | Topic | Key methods |
+|---|---|---|
+| [Gaussian Naïve Bayes](chapters/04-naive-bayes.qmd) | Iris classification from scratch | Gaussian likelihoods, Bayes' theorem, confusion matrix |
+| [Neural Network](chapters/05-neural-network.qmd) | Dry Bean classification | `MLPClassifier`, feature scaling, hyperparameter tuning |
+| [Random Forest](chapters/06-random-forest.qmd) | Gini impurity & feature importance | Decision trees, MDI vs permutation importance |
+| [ROC & K-Fold](chapters/07-roc-kfold.qmd) | Bankruptcy prediction | Stratified cross-validation, ROC/AUC, normalization |
+| [Decision Trees](chapters/08-decision-trees.qmd) | Breast cancer diagnosis | Entropy/information gain, hyperparameter effects |
+
+## How to read this book
+
+- Use the **sidebar** to jump between chapters, or the **search** box (top of the sidebar) to find a topic.
+- Most charts are **interactive** — hover for tooltips, click legend entries to toggle series, and drag to zoom.
+- Code is **folded by default**. Click **▸ Code** above any output to reveal the source, or use the **code menu** (top-right) to show all code at once.
+
+## Reproducibility
+
+Every chapter is self-contained and fully reproducible — each one loads its own data and computes its results at render time. Datasets live in the `Files/` directory of the [source repository](https://github.com/arihaanbarua/stat380-portfolio); the machine-learning chapters pull benchmark datasets directly from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/).
+
+::: {.callout-note}
+This portfolio was reorganized from a single Quarto dashboard into a multi-chapter book for easier navigation and maintenance. The original problem-set submissions (notebooks, PDFs, and source `.qmd` files) are preserved in the `Files/` directory.
+:::

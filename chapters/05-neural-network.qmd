@@ -1,0 +1,136 @@
+# Neural Network — Dry Bean Classification
+
+```{r}
+#| include: false
+library(reticulate)
+```
+
+```{python}
+#| include: false
+import warnings
+warnings.filterwarnings('ignore')
+
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
+
+# ── Dry Bean dataset (ucimlrepo with direct-download fallback) ────────────────
+try:
+    from ucimlrepo import fetch_ucirepo
+    dry_bean = fetch_ucirepo(id=602)
+    nn_X = dry_bean.data.features
+    nn_y = dry_bean.data.targets.values.ravel()
+except Exception:
+    import io, ssl, certifi, urllib.request
+    _ctx = ssl.create_default_context(cafile=certifi.where())
+    url  = "https://archive.ics.uci.edu/static/public/602/data.csv"
+    raw  = urllib.request.urlopen(url, timeout=30, context=_ctx).read()
+    df_bean = pd.read_csv(io.BytesIO(raw))
+    nn_y = df_bean.iloc[:, -1].values.ravel()
+    nn_X = df_bean.iloc[:, :-1]
+nn_classes = sorted(list(set(nn_y)))
+
+nn_scaler = StandardScaler()
+nn_X_sc   = nn_scaler.fit_transform(nn_X)
+
+nn_X_train, nn_X_test, nn_y_train, nn_y_test = train_test_split(
+    nn_X_sc, nn_y, test_size=0.2, random_state=1
+)
+
+# ── 4 configurations from the notebook ───────────────────────────────────────
+nn_configs = [
+    {"name": "Run 1\n(100,) α=0.0001",   "layers": (100,),    "alpha": 0.0001},
+    {"name": "Run 2\n(200,) α=0.0001",   "layers": (200,),    "alpha": 0.0001},
+    {"name": "Run 3\n(100,50) α=0.0001", "layers": (100, 50), "alpha": 0.0001},
+    {"name": "Run 4\n(100,) α=0.001",    "layers": (100,),    "alpha": 0.001 },
+]
+
+nn_results = []
+for cfg in nn_configs:
+    mlp = MLPClassifier(hidden_layer_sizes=cfg["layers"], activation='relu',
+                        alpha=cfg["alpha"], max_iter=300, random_state=1)
+    mlp.fit(nn_X_train, nn_y_train)
+    acc = accuracy_score(nn_y_test, mlp.predict(nn_X_test))
+    nn_results.append({"Config": cfg["name"], "Accuracy": round(acc, 4),
+                       "Layers": str(cfg["layers"]), "Alpha": cfg["alpha"]})
+
+nn_res_df   = pd.DataFrame(nn_results)
+best_nn_idx = nn_res_df["Accuracy"].idxmax()
+
+best_cfg = nn_configs[best_nn_idx]
+best_mlp = MLPClassifier(hidden_layer_sizes=best_cfg["layers"], activation='relu',
+                         alpha=best_cfg["alpha"], max_iter=300, random_state=1)
+best_mlp.fit(nn_X_train, nn_y_train)
+nn_y_pred = best_mlp.predict(nn_X_test)
+nn_cm     = confusion_matrix(nn_y_test, nn_y_pred, labels=nn_classes)
+nn_report = classification_report(nn_y_test, nn_y_pred, labels=nn_classes, output_dict=True)
+```
+
+This chapter trains a **Multi-Layer Perceptron (MLP)** neural network to classify seven varieties of dry bean from 16 morphological features, tuning the architecture and regularization to maximize accuracy. It was completed as a class competition (worked on with Sabeeh and Ronish).
+
+## Results
+
+::: {.panel-tabset}
+
+### Configuration Comparison
+
+```{python}
+fig_nn1 = px.bar(
+    nn_res_df, x="Config", y="Accuracy", color="Config",
+    text=nn_res_df["Accuracy"].apply(lambda v: f"{v*100:.2f}%"),
+    title="MLP Classifier Accuracy — Dry Bean Dataset (4 Configurations)",
+    labels={"Accuracy": "Test Accuracy", "Config": "Configuration"},
+    color_discrete_sequence=px.colors.qualitative.Set2
+)
+fig_nn1.update_traces(textposition="outside")
+fig_nn1.update_layout(showlegend=False, template="plotly_white", height=430,
+                      yaxis=dict(range=[0.9, 0.96], tickformat=".1%"),
+                      xaxis_title="MLP Configuration")
+fig_nn1.show()
+```
+
+Each bar shows the test-set accuracy for one configuration of the Multi-Layer Perceptron classifier trained on the UCI Dry Bean dataset (~13,600 samples, 16 features, 7 bean species). All four runs use the ReLU activation function and were scaled with StandardScaler before training — without scaling, accuracy dropped to ~25%. The configurations vary the hidden layer size and regularization strength (alpha). **Run 4** (single layer of 100 neurons, α = 0.001) achieves the highest accuracy at ~94%, showing that slightly stronger regularization improves generalization over the default α = 0.0001. Deeper networks (Run 3) did not outperform wider single-layer ones, likely because the dataset is not complex enough to benefit from additional depth.
+
+### Confusion Matrix (Best Model)
+
+```{python}
+fig_nn2 = go.Figure(data=go.Heatmap(
+    z=nn_cm, x=nn_classes, y=nn_classes, colorscale="Blues", showscale=True,
+    text=nn_cm, texttemplate="%{text}", textfont=dict(size=11)
+))
+fig_nn2.update_layout(
+    title=f"Confusion Matrix — Best Config: {best_cfg['name'].replace(chr(10),' ')} "
+          f"(Acc: {nn_res_df['Accuracy'].max()*100:.2f}%)",
+    xaxis_title="Predicted Class", yaxis_title="True Class",
+    xaxis=dict(side="bottom", tickangle=-30), template="plotly_white", height=480
+)
+fig_nn2.show()
+```
+
+The confusion matrix for the best-performing configuration shows how each of the 7 bean species was classified on the held-out 20% test set. Rows are the true species; columns are the predicted species. Strong diagonal values indicate accurate predictions for that class. Off-diagonal numbers reveal the specific misclassification pairs — beans with similar morphological profiles (e.g., similar area or perimeter) are more likely to be confused with each other. The heatmap color intensity makes it easy to spot which classes pose the greatest classification challenge.
+
+:::
+
+::: {.callout-tip}
+## Key Findings — Dry Bean Classification
+
+**Dataset:** UCI Dry Bean (id=602) — ~13,611 samples, 16 features, 7 bean species
+**Architecture:** MLPClassifier with ReLU activation, trained 300 epochs
+
+| Run | Hidden Layers | Alpha | Test Accuracy |
+|---|---|---|---|
+| Run 1 | (100,) | 0.0001 | 93.57% |
+| Run 2 | (200,) | 0.0001 | 93.94% |
+| Run 3 | (100, 50) | 0.0001 | 93.61% |
+| Run 4 ✓ | (100,) | 0.001 | **94.01%** |
+
+- **Feature scaling is essential** — without StandardScaler, the model achieved only ~25% accuracy because neural networks are sensitive to differing feature magnitudes.
+- **ReLU outperforms logistic** activation by avoiding the vanishing gradient problem, allowing the network to learn more effectively.
+- **Regularization (alpha)** — increasing alpha from 0.0001 to 0.001 improved generalization, suggesting the default regularization was slightly underfit.
+- **Depth vs width** — adding a second layer (100, 50) did not improve over a single wider layer, suggesting the task doesn't require deep hierarchical feature extraction.
+:::

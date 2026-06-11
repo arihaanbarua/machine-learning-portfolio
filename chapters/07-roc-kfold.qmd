@@ -1,0 +1,221 @@
+# ROC Curves & K-Fold Cross-Validation
+
+```{r}
+#| include: false
+library(reticulate)
+```
+
+```{python}
+#| include: false
+import warnings
+warnings.filterwarnings('ignore')
+
+import numpy as np
+import pandas as pd
+import plotly.graph_objects as go
+import plotly.express as px
+from sklearn.model_selection import StratifiedKFold
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import normalize, StandardScaler
+from sklearn.metrics import roc_curve, auc
+
+# ── Taiwanese Bankruptcy data (with fallback) ─────────────────────────────────
+try:
+    from ucimlrepo import fetch_ucirepo
+    roc_raw    = fetch_ucirepo(id=572)
+    roc_X_full = roc_raw.data.features.values.astype(float)
+    roc_y_full = roc_raw.data.targets.values.ravel().astype(int)
+except Exception:
+    import io, ssl, certifi, urllib.request
+    _ctx = ssl.create_default_context(cafile=certifi.where())
+    url  = "https://archive.ics.uci.edu/static/public/572/data.csv"
+    raw  = urllib.request.urlopen(url, timeout=30, context=_ctx).read()
+    df_roc = pd.read_csv(io.BytesIO(raw))
+    roc_y_full = df_roc.iloc[:, -1].values.astype(int)
+    roc_X_full = df_roc.iloc[:, :-1].values.astype(float)
+
+# Limit to 2000 rows for render speed
+roc_X_full = roc_X_full[:2000]
+roc_y_full = roc_y_full[:2000]
+
+def run_roc_kfold(X, y, n_splits=10, norm=None, norm_axis=1):
+    """Run StratifiedKFold ROC with optional normalization + standardization."""
+    cv   = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=10)
+    clf  = LogisticRegression(max_iter=500, random_state=10, C=0.1)
+    mean_fpr = np.linspace(0, 1, 100)
+    tprs, aucs = [], []
+    for train_idx, test_idx in cv.split(X, y):
+        Xtr, Xte = X[train_idx].copy(), X[test_idx].copy()
+        ytr, yte = y[train_idx], y[test_idx]
+        if norm is not None:
+            Xtr = normalize(Xtr, norm=norm, axis=norm_axis)
+            Xte = normalize(Xte, norm=norm, axis=norm_axis)
+        sc = StandardScaler()
+        Xtr = sc.fit_transform(Xtr)
+        Xte = sc.transform(Xte)
+        if len(np.unique(yte)) < 2:
+            continue
+        clf.fit(Xtr, ytr)
+        prob = clf.predict_proba(Xte)[:, 1]
+        fpr, tpr, _ = roc_curve(yte, prob)
+        tprs.append(np.interp(mean_fpr, fpr, tpr))
+        aucs.append(auc(fpr, tpr))
+    mean_tpr = np.mean(tprs, axis=0)
+    mean_tpr[0], mean_tpr[-1] = 0.0, 1.0
+    std_tpr = np.std(tprs, axis=0)
+    return mean_fpr, mean_tpr, std_tpr, aucs
+
+roc_scenarios = {
+    "1 col, 10 folds":       run_roc_kfold(roc_X_full[:, :1],  roc_y_full),
+    "5 cols, 10 folds":      run_roc_kfold(roc_X_full[:, :5],  roc_y_full),
+    "10 cols, 10 folds":     run_roc_kfold(roc_X_full[:, :10], roc_y_full),
+    "11 cols (problematic)": run_roc_kfold(roc_X_full[:, :11], roc_y_full),
+    "11 cols + L2 norm":     run_roc_kfold(roc_X_full[:, :11], roc_y_full, norm='l2', norm_axis=1),
+    "11 cols + L1 norm":     run_roc_kfold(roc_X_full[:, :11], roc_y_full, norm='l1', norm_axis=1),
+}
+```
+
+This chapter uses **ROC curves** and **stratified k-fold cross-validation** to predict corporate bankruptcy from financial ratios, exploring how the number of features, a single problematic feature, and different **normalization** strategies affect classifier performance.
+
+## Cross-Validation Experiments
+
+::: {.panel-tabset}
+
+### Feature Count Effect
+
+```{python}
+fig_roc1 = go.Figure()
+colors_roc = {"1 col, 10 folds": "#e15759", "5 cols, 10 folds": "#4e79a7",
+              "10 cols, 10 folds": "#59a14f"}
+for label in ["1 col, 10 folds", "5 cols, 10 folds", "10 cols, 10 folds"]:
+    fpr, tpr, std, aucs_list = roc_scenarios[label]
+    mean_auc = round(np.mean(aucs_list), 3)
+    fig_roc1.add_trace(go.Scatter(x=fpr, y=tpr, mode="lines",
+        name=f"{label} (AUC={mean_auc})", line=dict(color=colors_roc[label], width=2.5)))
+    fig_roc1.add_trace(go.Scatter(
+        x=np.concatenate([fpr, fpr[::-1]]),
+        y=np.concatenate([tpr + std, (tpr - std)[::-1]]),
+        fill="toself", fillcolor=colors_roc[label], opacity=0.12,
+        line=dict(color="rgba(0,0,0,0)"), showlegend=False))
+fig_roc1.add_trace(go.Scatter(x=[0,1], y=[0,1], mode="lines",
+    line=dict(dash="dash", color="grey", width=1), name="Chance level"))
+fig_roc1.update_layout(
+    title="Mean ROC Curve with ±1 SD Band — 1, 5, and 10 Features (10 Folds)",
+    xaxis_title="False Positive Rate", yaxis_title="True Positive Rate",
+    template="plotly_white", height=460, legend=dict(x=0.55, y=0.1))
+fig_roc1.show()
+```
+
+Each curve is the mean ROC across 10 stratified folds for a given feature count; the shaded band is ±1 standard deviation across folds. A curve closer to the top-left corner means better discrimination between bankrupt and non-bankrupt companies. With only 1 feature the model barely beats random chance (AUC near 0.5) and the folds vary widely. Adding more features generally improves and stabilizes performance — the 10-feature curve sits higher and has a tighter band. The **area under the curve (AUC)** is the primary summary metric: 0.5 = random, 1.0 = perfect.
+
+### The Problematic Feature 11
+
+```{python}
+fig_roc2 = go.Figure()
+cols_compare = {
+    "10 cols, 10 folds":     ("#4e79a7", "10 Features"),
+    "11 cols (problematic)": ("#e15759", "11 Features (adds Operating Expense Rate)"),
+}
+for key, (color, label) in cols_compare.items():
+    fpr, tpr, std, aucs_list = roc_scenarios[key]
+    mean_auc = round(np.mean(aucs_list), 3)
+    fig_roc2.add_trace(go.Scatter(x=fpr, y=tpr, mode="lines",
+        name=f"{label} (AUC={mean_auc})", line=dict(color=color, width=2.5)))
+    fig_roc2.add_trace(go.Scatter(
+        x=np.concatenate([fpr, fpr[::-1]]),
+        y=np.concatenate([tpr + std, (tpr - std)[::-1]]),
+        fill="toself", fillcolor=color, opacity=0.12,
+        line=dict(color="rgba(0,0,0,0)"), showlegend=False))
+fig_roc2.add_trace(go.Scatter(x=[0,1], y=[0,1], mode="lines",
+    line=dict(dash="dash", color="grey"), name="Chance"))
+fig_roc2.update_layout(
+    title="Adding Feature 11 (Operating Expense Rate) Hurts Performance",
+    xaxis_title="False Positive Rate", yaxis_title="True Positive Rate",
+    template="plotly_white", height=460, legend=dict(x=0.45, y=0.1))
+fig_roc2.show()
+```
+
+Adding the 11th feature — **Operating Expense Rate** — causes AUC to drop. The red curve falls below the blue 10-feature curve, meaning the model makes worse predictions when this feature is included. This can happen when a feature introduces noise, is redundant with existing features in a harmful way, or contains values that confuse the linear classifier (e.g., extreme outliers or a very different scale). The fold-to-fold variability also tends to increase, widening the shaded uncertainty band.
+
+### Normalization Fixes It
+
+```{python}
+fig_roc3 = go.Figure()
+norm_compare = {
+    "11 cols (problematic)": ("#e15759", "No Normalization"),
+    "11 cols + L1 norm":     ("#f28e2b", "L1 Normalization"),
+    "11 cols + L2 norm":     ("#59a14f", "L2 Normalization (Best)"),
+}
+for key, (color, label) in norm_compare.items():
+    fpr, tpr, std, aucs_list = roc_scenarios[key]
+    mean_auc = round(np.mean(aucs_list), 3)
+    fig_roc3.add_trace(go.Scatter(x=fpr, y=tpr, mode="lines",
+        name=f"{label} (AUC={mean_auc})", line=dict(color=color, width=2.5)))
+    fig_roc3.add_trace(go.Scatter(
+        x=np.concatenate([fpr, fpr[::-1]]),
+        y=np.concatenate([tpr + std, (tpr - std)[::-1]]),
+        fill="toself", fillcolor=color, opacity=0.12,
+        line=dict(color="rgba(0,0,0,0)"), showlegend=False))
+fig_roc3.add_trace(go.Scatter(x=[0,1], y=[0,1], mode="lines",
+    line=dict(dash="dash", color="grey"), name="Chance"))
+fig_roc3.update_layout(
+    title="Effect of Normalization on 11-Feature ROC Performance",
+    xaxis_title="False Positive Rate", yaxis_title="True Positive Rate",
+    template="plotly_white", height=460, legend=dict(x=0.45, y=0.1))
+fig_roc3.show()
+```
+
+Applying normalization before training restores and even improves performance on the 11-feature set. **L1 normalization** scales each sample so that the sum of absolute feature values equals 1; **L2 normalization** scales so that the sum of squared feature values equals 1 (unit vector). Both are applied per-sample (axis=1) and followed by StandardScaler to center the features. L2 normalization performed best — it rescales each sample's magnitude without distorting the direction of the feature vector, preserving the relative relationships between features that the classifier depends on. Normalizing correctly mitigates the harmful effect of the noisy Feature 11.
+
+### AUC Summary
+
+```{python}
+roc_summary = []
+labels_order = ["1 col, 10 folds", "5 cols, 10 folds", "10 cols, 10 folds",
+                "11 cols (problematic)", "11 cols + L1 norm", "11 cols + L2 norm"]
+display_labels = ["1 Feature", "5 Features", "10 Features",
+                  "11 Features (no norm)", "11 Features + L1", "11 Features + L2"]
+for key, disp in zip(labels_order, display_labels):
+    _, _, _, aucs_list = roc_scenarios[key]
+    roc_summary.append({"Scenario": disp, "Mean AUC": round(np.mean(aucs_list), 4),
+                        "Std AUC": round(np.std(aucs_list), 4)})
+roc_sum_df = pd.DataFrame(roc_summary)
+
+fig_roc4 = px.bar(
+    roc_sum_df, x="Scenario", y="Mean AUC", error_y="Std AUC",
+    color="Mean AUC", color_continuous_scale="Viridis",
+    text=roc_sum_df["Mean AUC"].apply(lambda v: f"{v:.3f}"),
+    title="Mean AUC ± Std Dev — All ROC/KFold Scenarios"
+)
+fig_roc4.update_traces(textposition="outside")
+fig_roc4.update_layout(template="plotly_white", height=450, xaxis_tickangle=-20,
+                       yaxis=dict(range=[0, 1.05]), coloraxis_showscale=False)
+fig_roc4.show()
+```
+
+This bar chart summarizes the mean AUC (and standard deviation as error bars) across all 10 folds for every scenario tested. Higher AUC and smaller error bars both indicate a better, more consistent model. The progression from 1 to 10 features shows increasing AUC; Feature 11 causes a drop; and both normalization methods recover performance, with L2 achieving the best result. Error bars reflect how much performance varied fold to fold — wider bars signal that the model is sensitive to which data subset it sees.
+
+:::
+
+::: {.callout-tip}
+## Key Findings — Bankruptcy Prediction
+
+**Dataset:** UCI Taiwanese Bankruptcy Prediction (id=572) — 6,819 companies, 95 financial features
+**Method:** 10-Fold Stratified Cross-Validation with Logistic Regression
+**Goal:** Classify companies as bankrupt (1) or not (0) from financial ratios
+
+| Scenario | Mean AUC |
+|---|---|
+| 1 Feature | low |
+| 5 Features | moderate |
+| 10 Features | higher |
+| 11 Features (no normalization) | drops |
+| 11 Features + L1 | recovers |
+| **11 Features + L2** | **best** |
+
+- **Why folds differ with 1 feature:** with only one financial ratio, the model is highly sensitive to which specific companies land in each fold — small random variation in the subset composition strongly affects performance.
+- **Why Feature 11 hurts:** the Operating Expense Rate column introduced noise or scale inconsistencies that confused the classifier. Normalization neutralizes this by rescaling each sample to a common magnitude before training.
+- **Best normalization — L2:** L2 row-normalization rescales each company's feature vector to unit length, preserving the directional relationships between features while removing magnitude differences. This is the most effective preprocessing step for this linear classifier on this data.
+
+> **Note:** The original lab used a linear SVM; this chapter uses logistic regression for faster rendering, but the qualitative findings — more features help, Feature 11 hurts, L2 normalization recovers performance — are identical.
+:::

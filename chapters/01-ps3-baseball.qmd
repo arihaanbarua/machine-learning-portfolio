@@ -1,0 +1,93 @@
+# Problem Set 3: Baseball Records
+
+```{r}
+#| include: false
+library(dplyr)
+library(Lahman)
+
+# ── Lahman Baseball records ──────────────────────────────────────────────────
+bat_300_300 <- Batting %>%
+  group_by(playerID) %>%
+  summarise(
+    total_HR = sum(HR, na.rm = TRUE),
+    total_SB = sum(SB, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(total_HR >= 300, total_SB >= 300) %>%
+  left_join(People %>% select(playerID, nameFirst, nameLast), by = "playerID") %>%
+  select(nameFirst, nameLast, total_HR, total_SB) %>%
+  arrange(desc(total_HR), desc(total_SB), nameLast, nameFirst)
+
+pitch_300_3000 <- Pitching %>%
+  group_by(playerID) %>%
+  summarise(
+    total_W  = sum(W,  na.rm = TRUE),
+    total_SO = sum(SO, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(total_W >= 300, total_SO >= 3000) %>%
+  left_join(People %>% select(playerID, nameFirst, nameLast), by = "playerID") %>%
+  mutate(player = paste(nameFirst, nameLast)) %>%
+  select(player, total_W, total_SO) %>%
+  arrange(desc(total_W), desc(total_SO), player)
+
+top5_hits <- Batting %>%
+  group_by(playerID) %>%
+  summarise(
+    total_H      = sum(H, na.rm = TRUE),
+    start_year   = min(yearID, na.rm = TRUE),
+    end_year     = max(yearID, na.rm = TRUE),
+    career_years = end_year - start_year + 1,
+    .groups = "drop"
+  ) %>%
+  left_join(People %>% select(playerID, nameFirst, nameLast), by = "playerID") %>%
+  arrange(desc(total_H)) %>%
+  slice(1:5) %>%
+  select(nameFirst, nameLast, career_years, total_H)
+```
+
+This problem set queries the historical **Lahman Baseball Database** with `dplyr` to surface the small groups of players who reached rare career milestones — combining different elite skills, dominating across decades, or sustaining production over very long careers.
+
+## Baseball Records
+
+Aggregating career totals across the full Lahman database, these tables identify the players who cleared legendary statistical thresholds.
+
+::: {.panel-tabset}
+
+### 300 HR & 300 SB Club
+
+```{r}
+knitr::kable(
+  bat_300_300,
+  col.names = c("First Name", "Last Name", "Career HR", "Career SB"),
+  caption   = "Players who hit at least 300 home runs AND stole at least 300 bases over their careers."
+)
+```
+
+This table identifies the rare group of MLB batters who achieved the "300/300" milestone — combining elite power (≥ 300 home runs) with elite speed (≥ 300 stolen bases) across their entire careers. Only a handful of players in baseball history have reached both thresholds, reflecting an uncommon combination of two very different skills. The table is sorted by home runs descending so the most powerful players appear first.
+
+### 300 Wins & 3000 Strikeouts Club
+
+```{r}
+knitr::kable(
+  pitch_300_3000,
+  col.names = c("Player", "Career Wins", "Career Strikeouts"),
+  caption   = "Pitchers who won at least 300 games AND struck out at least 3,000 batters over their careers."
+)
+```
+
+This table highlights the most dominant and durable pitchers in MLB history — those who cleared both the 300-win and 3,000-strikeout milestones. Reaching 300 wins requires both excellence and longevity; adding 3,000 strikeouts signals that the pitcher also overpowered hitters rather than simply surviving. Every player on this list is widely considered a Hall of Fame-caliber career.
+
+### Top 5 Hit Leaders
+
+```{r}
+knitr::kable(
+  top5_hits,
+  col.names = c("First Name", "Last Name", "Career Years", "Career Hits"),
+  caption   = "The five players with the most career hits in MLB history."
+)
+```
+
+This table shows the five all-time leaders in career base hits along with how many seasons each player was active. Career hits is a strong indicator of both skill and longevity — a player needs consistent on-base ability over many seasons to accumulate hits at this level. The "Career Years" column spans from the player's first recorded season to their last, giving context for how long each player sustained their production.
+
+:::

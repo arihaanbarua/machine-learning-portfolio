@@ -1,0 +1,361 @@
+# Problem Set 4: Insurance, Used Cars & NOVA Housing
+
+```{r}
+#| include: false
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(plotly)
+library(scales)
+
+# ── Metric helper functions ───────────────────────────────────────────────────
+R2_fn   <- function(y, yhat) { rss <- sum((y - yhat)^2); tss <- sum((y - mean(y))^2); 1 - rss/tss }
+MSE_fn  <- function(y, yhat) mean((y - yhat)^2)
+RMSE_fn <- function(y, yhat) sqrt(MSE_fn(y, yhat))
+MAE_fn  <- function(y, yhat) mean(abs(y - yhat))
+
+# ── Q1: Insurance Charges — nested models ────────────────────────────────────
+insurance <- read.csv("Files/Insurance.csv")
+insurance <- insurance[!is.na(insurance$charges), ]
+
+set.seed(42)
+ins_n         <- nrow(insurance)
+ins_train_idx <- sample(1:ins_n, size = floor(0.8 * ins_n), replace = FALSE)
+ins_train     <- insurance[ins_train_idx, ]
+ins_valid     <- insurance[-ins_train_idx, ]
+
+ins_m1 <- lm(charges ~ age,                                    data = ins_train)
+ins_m2 <- lm(charges ~ age + bmi,                              data = ins_train)
+ins_m3 <- lm(charges ~ age + bmi + smoker,                     data = ins_train)
+ins_m4 <- lm(charges ~ age + bmi + smoker + children,          data = ins_train)
+ins_m5 <- lm(charges ~ age + sex + bmi + children + smoker + region, data = ins_train)
+ins_models <- list(ins_m1, ins_m2, ins_m3, ins_m4, ins_m5)
+
+ins_labels <- c("age", "age+bmi", "age+bmi+smoker",
+                "age+bmi+smoker+children", "age+sex+bmi+children+smoker+region")
+
+ins_train_r2     <- sapply(ins_models, function(m) R2_fn(ins_train$charges, predict(m, ins_train)))
+ins_train_r2_adj <- sapply(ins_models, function(m) summary(m)$adj.r.squared)
+
+ins_val_metrics <- data.frame(
+  Model           = ins_labels,
+  Train_R2        = round(ins_train_r2, 4),
+  Train_R2_adj    = round(ins_train_r2_adj, 4),
+  Validation_MSE  = NA_real_,
+  Validation_RMSE = NA_real_,
+  Validation_MAE  = NA_real_
+)
+for (i in seq_along(ins_models)) {
+  yhat <- predict(ins_models[[i]], newdata = ins_valid)
+  ins_val_metrics$Validation_MSE[i]  <- round(MSE_fn(ins_valid$charges,  yhat), 0)
+  ins_val_metrics$Validation_RMSE[i] <- round(RMSE_fn(ins_valid$charges, yhat), 2)
+  ins_val_metrics$Validation_MAE[i]  <- round(MAE_fn(ins_valid$charges,  yhat), 2)
+}
+best_ins_idx <- which.min(ins_val_metrics$Validation_MSE)
+
+# ── Q2: Used Car Price ────────────────────────────────────────────────────────
+val_cars <- read.csv("https://raw.githubusercontent.com/maxwellhahn/maxwellhahn/refs/heads/main/Validation_set.csv")
+val_cars <- val_cars[!is.na(val_cars$Miles) & !is.na(val_cars$Price), ]
+val_cars$ModelTacoma     <- ifelse(val_cars$Model == "Tacoma", 1, 0)
+val_cars$ModelVolt       <- ifelse(val_cars$Model == "Volt",   1, 0)
+val_cars$Predicted_Price <- 18.69496 - 0.07807 * val_cars$Miles +
+                            9.45872 * val_cars$ModelTacoma -
+                            11.02341 * val_cars$ModelVolt
+cars_rmse <- round(sqrt(mean((val_cars$Price - val_cars$Predicted_Price)^2)), 4)
+
+# ── Q3-Q5: NOVA Housing EDA & Regression ─────────────────────────────────────
+nova4 <- read.csv("Files/NOVA.csv")
+nova4_clean <- nova4[nova4$Price <= 3000000 &
+                     !(nova4$CountySchool %in% c("LOUDOUN COUNTY PUBLIC SCHOOLS",
+                                                  "PRINCE WILLIAM COUNTY PUBLIC SCHOOLS")), ]
+nova4_clean$logPrice  <- log(nova4_clean$Price)
+nova4_clean$Single    <- ifelse(nova4_clean$ListingType == "Single Family", 1, 0)
+nova4_clean$Arlington <- ifelse(nova4_clean$CountySchool == "ARLINGTON COUNTY PUBLIC SCHOOLS", 1, 0)
+nova4_outliers <- nova4[nova4$Price > 3000000, ]
+
+model_bath  <- lm(logPrice ~ Bathrooms,             data = nova4_clean)
+model_multi <- lm(logPrice ~ Bathrooms + Arlington, data = nova4_clean)
+
+bath_cor   <- round(cor(nova4_clean$logPrice, nova4_clean$Bathrooms), 4)
+bath_r2    <- round(summary(model_bath)$r.squared, 4)
+bath_sigma <- round(summary(model_bath)$sigma, 5)
+bath_slope <- round(coef(model_bath)["Bathrooms"], 6)
+bath_int   <- round(coef(model_bath)["(Intercept)"], 6)
+
+multi_r2     <- round(summary(model_multi)$r.squared, 4)
+multi_r2_adj <- round(summary(model_multi)$adj.r.squared, 4)
+multi_bath_b <- round(coef(model_multi)["Bathrooms"], 6)
+multi_arl_b  <- round(coef(model_multi)["Arlington"], 6)
+multi_int    <- round(coef(model_multi)["(Intercept)"], 6)
+bath_ci90    <- confint(model_multi, parm = "Bathrooms", level = 0.90)
+
+max_bath_idx  <- which.max(nova4_clean$Bathrooms)
+max_bath_obs  <- nova4_clean[max_bath_idx, ]
+max_bath_pred <- predict(model_bath, newdata = max_bath_obs)
+```
+
+This problem set works through model selection and interpretation across three datasets: comparing **nested linear models** on insurance charges, applying a **prediction equation** to used-car prices, and performing **EDA plus regression** on Northern Virginia housing.
+
+## Q1 — Insurance Charges
+
+Five nested models are fit, from `age` alone up to all six predictors, then compared on both training fit and held-out validation error.
+
+::: {.panel-tabset}
+
+### Training R²
+
+```{r}
+r2_df <- data.frame(
+  Model  = factor(ins_labels, levels = ins_labels),
+  R2     = ins_val_metrics$Train_R2,
+  R2_adj = ins_val_metrics$Train_R2_adj
+)
+r2_long <- tidyr::pivot_longer(r2_df, cols = c(R2, R2_adj), names_to = "Metric", values_to = "Value")
+
+p_r2 <- ggplot(r2_long, aes(x = Model, y = Value, fill = Metric)) +
+  geom_col(position = "dodge", width = 0.6) +
+  scale_fill_manual(values = c("R2" = "#4e79a7", "R2_adj" = "#f28e2b"),
+                    labels = c("R2" = "R²", "R2_adj" = "Adjusted R²")) +
+  scale_x_discrete(labels = function(x) gsub("\\+", "+\n", x)) +
+  labs(title = "Training R² vs Adjusted R² by Model",
+       x = "Model Predictors", y = "R²", fill = "Metric") +
+  theme_minimal(base_size = 11) +
+  theme(axis.text.x = element_text(size = 8))
+
+ggplotly(p_r2, tooltip = c("x", "y", "fill"))
+```
+
+Each pair of bars shows R² (blue) and Adjusted R² (orange) on the training set for each of the five nested models, from the simplest (age only) to the most complex (all six predictors). R² always increases as predictors are added — even irrelevant ones — while Adjusted R² penalizes for model complexity. The gap between them grows as the models become more complex, signaling diminishing returns. Adding `smoker` in Model 3 produces the largest single jump, indicating it is by far the strongest predictor of insurance charges.
+
+### Validation Metrics
+
+```{r}
+val_long <- tidyr::pivot_longer(
+  ins_val_metrics[, c("Model", "Validation_RMSE", "Validation_MAE")],
+  cols = c(Validation_RMSE, Validation_MAE),
+  names_to = "Metric", values_to = "Value"
+)
+val_long$Model <- factor(val_long$Model, levels = ins_labels)
+
+p_val <- ggplot(val_long, aes(x = Model, y = Value, color = Metric, group = Metric)) +
+  geom_line(linewidth = 1.1) +
+  geom_point(size = 3) +
+  scale_x_discrete(labels = function(x) paste0("M", seq_along(ins_labels))[match(x, ins_labels)]) +
+  scale_color_manual(values = c("Validation_RMSE" = "#e15759", "Validation_MAE" = "#4e79a7"),
+                     labels = c("Validation_RMSE" = "RMSE", "Validation_MAE" = "MAE")) +
+  labs(title = "Validation RMSE & MAE Across 5 Models",
+       x = "Model (M1 = simplest → M5 = full)", y = "Error ($)", color = "Metric") +
+  theme_minimal(base_size = 13)
+
+ggplotly(p_val, tooltip = c("x", "y", "colour"))
+```
+
+Both RMSE and MAE are computed on the held-out 20% validation set — lower means better out-of-sample predictions. M1 (age only) has the highest error. Both metrics drop sharply at M3 when `smoker` enters, then level off, confirming that smoking status dominates predictive power. The relatively small further drop from M3 to M5 suggests the extra predictors (sex, region) add limited value beyond what age, BMI, smoking, and children already capture.
+
+### Validation Table
+
+```{r}
+knitr::kable(
+  ins_val_metrics,
+  col.names = c("Model Predictors", "Train R²", "Train Adj. R²",
+                "Val. MSE", "Val. RMSE", "Val. MAE"),
+  caption = "Training fit statistics and validation error for all five insurance charge models."
+)
+```
+
+This table gives the full numeric breakdown for all five models side-by-side. Train R² and Adjusted R² summarize in-sample fit; the three validation columns (MSE, RMSE, MAE) measure out-of-sample accuracy on the held-out 20% validation set. Lower validation error is preferred. The winner on MSE is Model 4 (`age + bmi + smoker + children`), which balances complexity and generalization — adding region and sex in Model 5 does not improve validation performance.
+
+:::
+
+::: {.callout-tip}
+## Key Findings — Insurance
+
+**Best Model by Validation MSE:** Model `r best_ins_idx` — `r ins_labels[best_ins_idx]`
+
+| Model | Predictors | Val. MSE | Val. RMSE | Val. MAE |
+|---|---|---|---|---|
+| M1 | age | `r ins_val_metrics$Validation_MSE[1]` | `r ins_val_metrics$Validation_RMSE[1]` | `r ins_val_metrics$Validation_MAE[1]` |
+| M2 | age + bmi | `r ins_val_metrics$Validation_MSE[2]` | `r ins_val_metrics$Validation_RMSE[2]` | `r ins_val_metrics$Validation_MAE[2]` |
+| M3 | + smoker | `r ins_val_metrics$Validation_MSE[3]` | `r ins_val_metrics$Validation_RMSE[3]` | `r ins_val_metrics$Validation_MAE[3]` |
+| M4 | + children | `r ins_val_metrics$Validation_MSE[4]` | `r ins_val_metrics$Validation_RMSE[4]` | `r ins_val_metrics$Validation_MAE[4]` |
+| M5 | all vars | `r ins_val_metrics$Validation_MSE[5]` | `r ins_val_metrics$Validation_RMSE[5]` | `r ins_val_metrics$Validation_MAE[5]` |
+
+`smoker` is the single most important predictor — adding it in M3 cuts validation MSE dramatically. Beyond M4, adding sex and region yields no meaningful improvement on unseen data.
+:::
+
+## Q2 — Used Car Price Prediction
+
+A prediction equation derived from a training set is applied to a validation set of used-car listings.
+
+::: {.panel-tabset}
+
+### Predicted vs Actual
+
+```{r}
+p_cars <- ggplot(val_cars, aes(x = Price, y = Predicted_Price, color = Model,
+                                text = paste0("Model: ", Model,
+                                              "<br>Miles: ", Miles,
+                                              "<br>Actual: $", Price, "K",
+                                              "<br>Predicted: $", round(Predicted_Price, 2), "K"))) +
+  geom_point(size = 3, alpha = 0.8) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "red") +
+  scale_color_manual(values = c("Prius" = "#4e79a7", "Tacoma" = "#f28e2b", "Volt" = "#59a14f")) +
+  labs(title = "Used Car: Predicted vs Actual Price",
+       x = "Actual Price ($K)", y = "Predicted Price ($K)", color = "Car Model") +
+  theme_minimal(base_size = 13)
+
+ggplotly(p_cars, tooltip = "text")
+```
+
+Each point is one used-car listing from the validation set: the model's predicted price (y-axis) versus the car's actual listed price (x-axis), colored by car model (Prius, Tacoma, or Volt). The red dashed line marks perfect prediction. Points close to the line were predicted accurately; points above or below represent over- or under-predictions. The three car models occupy distinct price regions, reflecting the dummy-variable structure of the regression.
+
+:::
+
+::: {.callout-tip}
+## Key Findings — Used Cars
+
+**Regression Equation:** Price = 18.69496 − 0.07807(Miles) + 9.45872(Tacoma) − 11.02341(Volt)
+
+**Validation RMSE:** `r cars_rmse` ($K)
+
+- Every additional mile driven reduces predicted price by ~$78.
+- A Tacoma is predicted to sell for ~$9,459 more than the baseline (Prius), holding miles equal.
+- A Volt is predicted to sell for ~$11,023 less than the Prius, holding miles equal.
+:::
+
+## Q3 & Q4 — NOVA Housing EDA
+
+Exploratory analysis of Northern Virginia housing: identifying outliers, log-transforming price, and a first regression on bathroom count.
+
+::: {.panel-tabset}
+
+### Price Distribution
+
+```{r}
+p_price <- ggplot(nova4, aes(x = Price)) +
+  geom_histogram(binwidth = 200000, color = "black", fill = "lightblue") +
+  geom_vline(xintercept = 3000000, color = "red", linewidth = 1.2, linetype = "dashed") +
+  geom_point(data = nova4_outliers, aes(x = Price, y = 0),
+             color = "red", shape = 1, size = 8) +
+  scale_x_continuous(labels = scales::comma) +
+  labs(title = "Distribution of Property Prices",
+       subtitle = "Red dashed line = $3M cutoff; circled points are outliers",
+       x = "Price (dollars)", y = "Number of Properties") +
+  theme_minimal(base_size = 13)
+
+ggplotly(p_price)
+```
+
+This histogram shows the full distribution of asking prices across all Northern Virginia listings. The x-axis is in dollars; the y-axis counts properties in each bin. The red dashed vertical line marks the $3,000,000 cutoff, and the circled red points at the base highlight the handful of properties above it. These ultra-luxury outliers are concentrated in Arlington and Fairfax counties and have unusually large living square footage or lot sizes. Because they would disproportionately influence model fitting, they are removed before analysis.
+
+### logPrice Distribution
+
+```{r}
+p_logprice <- ggplot(nova4_clean, aes(x = logPrice)) +
+  geom_histogram(binwidth = 0.1, color = "black", fill = "#4e79a7", alpha = 0.8) +
+  labs(title = "Distribution of log(Price) — Cleaned Dataset",
+       x = "log(Price)", y = "Number of Properties") +
+  theme_minimal(base_size = 13)
+
+ggplotly(p_logprice)
+```
+
+After removing the $3M+ outliers and properties from Loudoun and Prince William counties, log-transforming price produces this much more symmetric, bell-shaped distribution. A symmetric distribution is important for linear regression — it satisfies the normality assumption for residuals and reduces the influence of extreme values. The transformation from raw dollars to log-dollars brings the skewed right tail of housing prices into a well-behaved range.
+
+### logPrice vs Bathrooms
+
+```{r}
+p_bath <- ggplot(nova4_clean, aes(x = Bathrooms, y = logPrice)) +
+  geom_point(alpha = 0.5, color = "#4e79a7", size = 1.5) +
+  geom_smooth(method = "lm", se = TRUE, color = "red", linetype = "solid") +
+  labs(title = "log(Price) vs Number of Bathrooms",
+       x = "Bathrooms", y = "log(Price)") +
+  theme_minimal(base_size = 13)
+
+ggplotly(p_bath)
+```
+
+Each point is one property: log(Price) on the y-axis versus bathroom count on the x-axis. The red line is the fitted simple linear regression with a 95% confidence band. A clear upward trend is visible — more bathrooms are associated with higher prices — and the relationship is reasonably linear on the log-price scale. Pearson correlation: r = `r bath_cor`. The regression line is: logPrice = `r bath_int` + `r bath_slope`(Bathrooms), explaining `r bath_r2*100`% of variation in log(Price).
+
+### Largest-Bathroom Residual
+
+```{r}
+p_resid <- ggplot(nova4_clean, aes(x = Bathrooms, y = logPrice)) +
+  geom_point(alpha = 0.4, color = "#4e79a7", size = 1.5) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  geom_segment(aes(x = max_bath_obs$Bathrooms, xend = max_bath_obs$Bathrooms,
+                   y = max_bath_pred, yend = max_bath_obs$logPrice),
+               color = "red", linewidth = 1.5) +
+  geom_point(data = max_bath_obs, aes(x = Bathrooms, y = logPrice),
+             color = "red", size = 4, shape = 17) +
+  labs(title = "Residual Highlighted for Maximum Bathrooms",
+       x = "Bathrooms", y = "log(Price)") +
+  theme_minimal(base_size = 13)
+
+ggplotly(p_resid)
+```
+
+The blue line is the fitted regression. The red triangle marks the property with the most bathrooms in the dataset, and the red vertical segment is its residual — the gap between what the model predicted (bottom of segment) and its actual log-price (top). A large residual here means the property's price is not fully explained by bathroom count alone, motivating the addition of more predictors like the Arlington indicator in Question 5.
+
+:::
+
+## Q5 — Multiple Regression
+
+Adding an `Arlington` county indicator to the bathroom model to control for location.
+
+::: {.panel-tabset}
+
+### Regression Fit
+
+```{r}
+p_multi <- ggplot(nova4_clean, aes(x = Bathrooms, y = logPrice, color = factor(Arlington))) +
+  geom_point(alpha = 0.35, size = 1.3) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.3) +
+  scale_color_manual(values = c("0" = "#4e79a7", "1" = "#e15759"),
+                     labels = c("0" = "Fairfax", "1" = "Arlington")) +
+  labs(title = "log(Price) ~ Bathrooms + Arlington",
+       x = "Bathrooms", y = "log(Price)", color = "County") +
+  theme_minimal(base_size = 13)
+
+ggplotly(p_multi, tooltip = c("x", "y", "colour"))
+```
+
+Points are colored by county (Arlington in red, Fairfax in blue); the two parallel lines are the fitted regression for each group. Because the model includes only main effects and no interaction, the lines are forced to have the same slope — the Arlington coefficient shifts the Fairfax line upward by a fixed amount. The vertical gap between the two lines is the estimated Arlington premium: Arlington homes are predicted to sell for `r round((exp(multi_arl_b) - 1) * 100, 1)`% more than comparable Fairfax homes.
+
+### Model Summary
+
+```{r}
+coef_df <- data.frame(
+  Term     = c("Intercept", "Bathrooms", "Arlington"),
+  Estimate = c(multi_int, multi_bath_b, multi_arl_b),
+  Interpretation = c(
+    "Predicted log(Price) when Bathrooms=0 and Fairfax",
+    paste0("logPrice increases by ", multi_bath_b, " per additional bathroom (Arlington held constant)"),
+    paste0("Arlington homes have logPrice ", multi_arl_b, " higher than Fairfax (Bathrooms held constant)")
+  )
+)
+knitr::kable(coef_df, digits = 6,
+             caption = "logPrice ~ Bathrooms + Arlington — coefficient estimates and interpretations")
+```
+
+This table translates the regression output into plain-language interpretations for each coefficient. The **Bathrooms** slope means that holding county constant, each additional bathroom is associated with a `r multi_bath_b` increase in log(Price). The **Arlington** coefficient is positive, confirming the county-level price premium after controlling for home size. The 90% confidence interval for the Bathrooms slope is [`r round(bath_ci90[1], 4)`, `r round(bath_ci90[2], 4)`].
+
+:::
+
+::: {.callout-tip}
+## Key Findings — Multiple Regression
+
+**Model:** logPrice = `r multi_int` + `r multi_bath_b`(Bathrooms) + `r multi_arl_b`(Arlington)
+
+| Metric | Value |
+|---|---|
+| R² | `r multi_r2` |
+| Adjusted R² | `r multi_r2_adj` |
+| Bathrooms slope | `r multi_bath_b` |
+| Arlington premium (log scale) | `r multi_arl_b` |
+| 90% CI for Bathrooms slope | [`r round(bath_ci90[1], 4)`, `r round(bath_ci90[2], 4)`] |
+
+- A 2-bathroom, Fairfax home has predicted logPrice = `r round(multi_int + multi_bath_b * 2, 4)`.
+- Holding bathrooms constant, Arlington homes have logPrice `r multi_arl_b` higher than Fairfax — roughly a `r round((exp(multi_arl_b) - 1) * 100, 1)`% price premium on the original dollar scale.
+- Adding Arlington raises R² from `r bath_r2` (bathrooms only) to `r multi_r2`, a meaningful improvement.
+:::
