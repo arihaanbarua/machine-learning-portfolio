@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Machine Learning Portfolio",
     "section": "",
-    "text": "Welcome\nThis is a portfolio of statistical modeling and machine-learning projects built in R and Python. Each chapter takes a real dataset, builds and evaluates models, and rebuilds every figure as an interactive plotly visualization — paired with a plain-language explanation of what the analysis is doing and why.",
+    "text": "Welcome\nThis is a portfolio of statistical modeling and machine-learning projects built in R and Python during my time at Penn State. Each chapter takes a real dataset, builds and evaluates models, and rebuilds every figure as an interactive plotly visualization — paired with a plain-language explanation of what the analysis is doing and why.",
     "crumbs": [
       "Welcome"
     ]

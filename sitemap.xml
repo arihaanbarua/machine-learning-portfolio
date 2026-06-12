@@ -2,19 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/index.html</loc>
-    <lastmod>2026-06-12T17:57:32.899Z</lastmod>
+    <lastmod>2026-06-12T18:09:10.826Z</lastmod>
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/01-data-wrangling.html</loc>
-    <lastmod>2026-06-12T17:58:35.666Z</lastmod>
+    <lastmod>2026-06-12T18:08:46.925Z</lastmod>
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/02-linear-regression.html</loc>
-    <lastmod>2026-06-12T17:58:50.167Z</lastmod>
+    <lastmod>2026-06-12T18:08:46.925Z</lastmod>
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/03-regularization-knn.html</loc>
-    <lastmod>2026-06-12T17:58:53.976Z</lastmod>
+    <lastmod>2026-06-12T18:08:46.926Z</lastmod>
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/04-naive-bayes.html</loc>
@@ -22,18 +22,18 @@
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/05-neural-network.html</loc>
-    <lastmod>2026-06-12T17:59:15.044Z</lastmod>
+    <lastmod>2026-06-12T18:08:46.926Z</lastmod>
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/06-random-forest.html</loc>
-    <lastmod>2026-06-12T17:59:19.276Z</lastmod>
+    <lastmod>2026-06-12T18:08:46.926Z</lastmod>
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/07-roc-kfold.html</loc>
-    <lastmod>2026-06-12T17:59:20.686Z</lastmod>
+    <lastmod>2026-06-12T18:08:46.927Z</lastmod>
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/08-decision-trees.html</loc>
-    <lastmod>2026-06-12T17:59:21.960Z</lastmod>
+    <lastmod>2026-06-12T18:08:46.927Z</lastmod>
   </url>
 </urlset>
