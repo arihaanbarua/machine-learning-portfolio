@@ -1,6 +1,6 @@
 # STAT 380 Portfolio
 
-A [Quarto book](https://quarto.org/docs/books/) collecting my work for **STAT 380 — Data Science** at Penn State. It combines three problem sets and five machine-learning assignments into a single navigable book, with every figure rebuilt as an interactive [plotly](https://plotly.com/) visualization and a plain-language explanation of the analysis.
+A [Quarto book](https://quarto.org/docs/books/) collecting a few of my machine learning projects from Penn State. It combines three problem sets and five machine-learning assignments into a single navigable book, with every figure rebuilt as an interactive [plotly](https://plotly.com/) visualization and a plain-language explanation of the analysis.
 
 📖 **Live book:** https://arihaanbarua.github.io/stat380-portfolio/
 
