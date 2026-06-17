@@ -14,7 +14,7 @@
     "href": "index.html#whats-inside",
     "title": "Machine Learning Portfolio",
     "section": "What’s inside",
-    "text": "What’s inside\nThe work is grouped into three parts: foundational statistical modeling in R, machine-learning models built in Python, and a collection of independent research projects.\n\nPart I — Data Analysis & Regression (R)\nBuilt with R, tidyverse, glmnet, and FNN.\n\n\n\nChapter\nFocus\nKey methods\n\n\n\n\nData Wrangling\nQuerying baseball career records\ndplyr aggregation, grouping & filtering\n\n\nLinear Regression\nInsurance, used cars & housing prices\nNested model comparison, validation metrics (MSE/RMSE/MAE), multiple regression\n\n\nRegularization & kNN\nSalary & housing prediction\nLASSO, backward elimination, k-nearest-neighbors regression\n\n\n\n\n\nPart II — Machine Learning (Python)\nBuilt with Python, scikit-learn, and plotly.\n\n\n\nChapter\nFocus\nKey methods\n\n\n\n\nGaussian Naïve Bayes\nIris classification from scratch\nGaussian likelihoods, Bayes’ theorem, confusion matrix\n\n\nNeural Networks\nDry Bean variety classification\nMLPClassifier, feature scaling, hyperparameter tuning\n\n\nRandom Forests\nGini impurity & feature importance\nDecision trees, MDI vs permutation importance\n\n\nROC & Cross-Validation\nCorporate bankruptcy prediction\nStratified k-fold, ROC/AUC, normalization\n\n\nDecision Trees\nBreast-cancer diagnosis\nEntropy/information gain, hyperparameter effects\n\n\n\n\n\nPart III — Research Projects\nA collection of independent research projects I conducted throughout the past school year. Unlike the coursework-driven chapters above, these are longer-form, self-directed investigations — each framing its own question, preparing data, applying statistical and machine-learning methods, and writing up the findings.\n\n\n\nProject\nFocus\n\n\n\n\nResearch Project 1\nIndependent research write-up\n\n\nResearch Project 2\nIndependent research write-up",
+    "text": "What’s inside\nThe work is grouped into three parts: foundational statistical modeling in R, machine-learning models built in Python, and a collection of research projects.\n\nPart I — Data Analysis & Regression (R)\nBuilt with R, tidyverse, glmnet, and FNN.\n\n\n\nChapter\nFocus\nKey methods\n\n\n\n\nData Wrangling\nQuerying baseball career records\ndplyr aggregation, grouping & filtering\n\n\nLinear Regression\nInsurance, used cars & housing prices\nNested model comparison, validation metrics (MSE/RMSE/MAE), multiple regression\n\n\nRegularization & kNN\nSalary & housing prediction\nLASSO, backward elimination, k-nearest-neighbors regression\n\n\n\n\n\nPart II — Machine Learning (Python)\nBuilt with Python, scikit-learn, and plotly.\n\n\n\nChapter\nFocus\nKey methods\n\n\n\n\nGaussian Naïve Bayes\nIris classification from scratch\nGaussian likelihoods, Bayes’ theorem, confusion matrix\n\n\nNeural Networks\nDry Bean variety classification\nMLPClassifier, feature scaling, hyperparameter tuning\n\n\nRandom Forests\nGini impurity & feature importance\nDecision trees, MDI vs permutation importance\n\n\nROC & Cross-Validation\nCorporate bankruptcy prediction\nStratified k-fold, ROC/AUC, normalization\n\n\nDecision Trees\nBreast-cancer diagnosis\nEntropy/information gain, hyperparameter effects\n\n\n\n\n\nPart III — Research Projects\nA collection of independent research projects I conducted throughout the past school year. Unlike the coursework-driven chapters above, these are longer-form, self-directed investigations — each framing its own question, preparing data, applying statistical and machine-learning methods, and writing up the findings.\n\n\n\nTerm\nProject\n\n\n\n\nFall 2025\nProtein Language Models for Specialized Synthetic Structures\n\n\nSpring 2026\nMachine Learning Analysis of Soil Microbial Efficiency",
     "crumbs": [
       "Welcome"
     ]
@@ -329,7 +329,7 @@
     "href": "chapters/09-research-projects.html#projects",
     "title": "Research Projects",
     "section": "",
-    "text": "Project\nSummary\n\n\n\n\nResearch Project 1\nWrite-up to be added.\n\n\nResearch Project 2\nWrite-up to be added.",
+    "text": "Term\nProject\n\n\n\n\nFall 2025\nProtein Language Models for Specialized Synthetic Structures\n\n\nSpring 2026\nMachine Learning Analysis of Soil Microbial Efficiency",
     "crumbs": [
       "Research Projects"
     ]
@@ -337,111 +337,111 @@
   {
     "objectID": "chapters/10-research-project-1.html",
     "href": "chapters/10-research-project-1.html",
-    "title": "9  Research Project 1",
+    "title": "9  Fall 2025",
     "section": "",
-    "text": "9.1 Abstract\n(Paste a short summary of the project here.)",
+    "text": "9.1 Abstract\nThis research project explored whether large-scale protein language models could identify relationships between protein sequence, structural stability, and pathological misfolding, and whether those relationships could be leveraged to generate novel synthetic protein structures computationally. By combining transformer-based deep learning, structural bioinformatics, and systems biology simulations, our team developed a framework capable of generating and evaluating hypothetical proteins. Using Penn State’s ROAR supercomputing infrastructure and the Johns Hopkins Virtual Cell environment, we investigated the feasibility of designing synthetic prion-like proteins capable of initiating targeted misfolding cascades associated with apoptotic pathways in cancerous glial cells responsible for many types of brain cancer.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Fall 2025</span>"
     ]
   },
   {
     "objectID": "chapters/10-research-project-1.html#background-motivation",
     "href": "chapters/10-research-project-1.html#background-motivation",
-    "title": "9  Research Project 1",
+    "title": "9  Fall 2025",
     "section": "9.2 Background & Motivation",
-    "text": "9.2 Background & Motivation",
+    "text": "9.2 Background & Motivation\nProtein misfolding plays a central role in numerous biological processes and diseases, yet the mechanisms connecting protein sequence to structural behavior remain difficult to characterize. Recent advances in protein language models have demonstrated that transformer architectures can learn biologically meaningful representations directly from amino acid sequences, enabling new approaches to protein structure prediction and generative protein design.\nThe motivation behind this project was to investigate whether these models could be applied to identify sequence patterns associated with controlled misfolding behavior and generate novel protein candidates with specific functional properties. As a proof-of-concept objective, we focused on computationally designing proteins capable of initiating targeted misfolding cascades associated with apoptotic signaling pathways in cancerous glial cells. The project aimed to integrate machine learning, structural biology, and mechanistic cellular simulations into a unified framework for computational therapeutic discovery.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Fall 2025</span>"
     ]
   },
   {
     "objectID": "chapters/10-research-project-1.html#methods",
     "href": "chapters/10-research-project-1.html#methods",
-    "title": "9  Research Project 1",
+    "title": "9  Fall 2025",
     "section": "9.3 Methods",
-    "text": "9.3 Methods",
+    "text": "9.3 Methods\nThe project began with the construction of a comprehensive protein sequence database using UniProt, the Protein Data Bank (PDB), AlphaFold Database, InterPro, Pfam, and additional repositories containing information on protein aggregation and conformational disorders. After preprocessing and quality control, the data were enriched with evolutionary conservation metrics, multiple sequence alignments, residue-level annotations, secondary structure predictions, solvent accessibility estimates, and protein family classifications.\nUsing this dataset, we developed a transformer-based protein language model utilizing masked language modeling objectives. The model was implemented using PyTorch, DeepSpeed, distributed data parallel training, multi-head self-attention mechanisms, rotary positional embeddings, mixed-precision training, and Bayesian hyperparameter optimization. Training and experimentation were conducted using Penn State’s ROAR computing infrastructure.\nFollowing pretraining, the model was fine-tuned on datasets related to protein folding and aggregation. Generated sequence embeddings were integrated with downstream structure prediction systems to estimate three-dimensional conformations and energetic stability profiles. Generative sampling methods, including beam search, top-k sampling, nucleus sampling, and constrained sequence generation, were then used to produce hypothetical protein candidates.\nCandidate proteins underwent extensive in silico screening using folding confidence metrics, aggregation propensity analysis, intrinsic disorder prediction, stability assessments, conservation analysis, and off-target interaction evaluation. Finally, promising candidates were imported into the Johns Hopkins Virtual Cell environment, where thousands of simulations were performed to evaluate hypothetical cellular responses, signaling interactions, and apoptosis-related pathways.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Fall 2025</span>"
     ]
   },
   {
     "objectID": "chapters/10-research-project-1.html#results",
     "href": "chapters/10-research-project-1.html#results",
-    "title": "9  Research Project 1",
+    "title": "9  Fall 2025",
     "section": "9.4 Results",
-    "text": "9.4 Results",
+    "text": "9.4 Results\nThe resulting framework successfully learned biologically meaningful protein representations and generated structurally plausible protein candidates. Fine-tuning on folding and aggregation datasets improved the model’s ability to recognize structural patterns associated with misfolding behavior and disease-relevant protein interactions.\nVirtual Cell simulations demonstrated that several generated protein candidates exhibited the desired theoretical characteristics within computational models, including interactions associated with protein stress responses, cellular damage detection pathways, and apoptosis-related signaling networks. Extensive benchmarking against published datasets showed competitive performance across multiple evaluation metrics, including ROC-AUC, PR-AUC, contact prediction accuracy, structural similarity measures, and embedding quality assessments.\nInterpretability analyses using SHAP values, integrated gradients, saliency mapping, UMAP visualizations, and clustering techniques identified key sequence features influencing model predictions and provided biological insight into the generated protein structures.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Fall 2025</span>"
     ]
   },
   {
     "objectID": "chapters/10-research-project-1.html#discussion-conclusion",
     "href": "chapters/10-research-project-1.html#discussion-conclusion",
-    "title": "9  Research Project 1",
+    "title": "9  Fall 2025",
     "section": "9.5 Discussion & Conclusion",
-    "text": "9.5 Discussion & Conclusion",
+    "text": "9.5 Discussion & Conclusion\nBy the conclusion of the project, our team had developed an end-to-end computational platform capable of learning protein representations from large biological datasets, generating novel hypothetical protein sequences, evaluating structural plausibility, simulating biological interactions, and quantifying predictive uncertainty.\nAlthough the work remained entirely in silico, successful validation within the Johns Hopkins Virtual Cell environment demonstrated the theoretical feasibility of using modern protein language models to generate highly specialized synthetic protein structures and accurately model their behavior within complex cellular systems. Most importantly, the results supported the central hypothesis that protein language models could be leveraged to design synthetic prion-like protein candidates capable of initiating targeted misfolding cascades and producing apoptosis-related responses within computational simulations. The project illustrated how advances in artificial intelligence, structural bioinformatics, and systems biology can be integrated into a unified framework for computational therapeutic discovery and next-generation protein engineering research.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Fall 2025</span>"
     ]
   },
   {
     "objectID": "chapters/11-research-project-2.html",
     "href": "chapters/11-research-project-2.html",
-    "title": "10  Research Project 2",
+    "title": "10  Spring 2026",
     "section": "",
-    "text": "10.1 Abstract\n(Paste a short summary of the project here.)",
+    "text": "10.1 Abstract\nThis research project explored how machine learning could be used to model the relationship between agricultural management practices, soil microbial communities, and long-term soil health outcomes. By integrating soil chemistry, microbial ecology, environmental variables, and land-use information into a Biologically Informed Neural Network (BINN), we developed a predictive framework capable of evaluating soil carbon sequestration, nutrient cycling efficiency, and microbial performance across Pennsylvania agricultural systems. The project aimed to identify sustainable management strategies that improve soil health while maintaining agricultural productivity.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spring 2026</span>"
     ]
   },
   {
     "objectID": "chapters/11-research-project-2.html#background-motivation",
     "href": "chapters/11-research-project-2.html#background-motivation",
-    "title": "10  Research Project 2",
+    "title": "10  Spring 2026",
     "section": "10.2 Background & Motivation",
-    "text": "10.2 Background & Motivation",
+    "text": "10.2 Background & Motivation\nSoil microbial communities play a critical role in nutrient cycling, organic matter formation, carbon sequestration, and ecosystem resilience; however, the interactions between management practices, environmental conditions, and microbial processes are highly complex and difficult to model using traditional approaches.\nThe motivation behind this project was to combine advances in machine learning with established ecological theory to better understand how agricultural decisions influence soil biological processes. Existing soil process models such as CENTURY, RothC, DayCent, and MIMICS provided valuable ecological insights, but often lacked the predictive flexibility of modern machine learning systems. Our goal was to develop a biologically informed framework capable of capturing these complex relationships while maintaining interpretability and ecological feasibility.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spring 2026</span>"
     ]
   },
   {
     "objectID": "chapters/11-research-project-2.html#methods",
     "href": "chapters/11-research-project-2.html#methods",
-    "title": "10  Research Project 2",
+    "title": "10  Spring 2026",
     "section": "10.3 Methods",
-    "text": "10.3 Methods",
+    "text": "10.3 Methods\nThe project began with an extensive review of soil carbon cycling literature, microbial carbon use efficiency research, regenerative agriculture studies, and interpretable machine learning methodologies. To support model development, we assembled a large agricultural dataset using USDA soil surveys, Pennsylvania agricultural extension databases, weather archives, remote sensing products, and long-term field experiments.\nThe dataset included measurements of soil organic carbon, microbial biomass, respiration rates, nutrient availability, moisture content, pH, bulk density, and additional soil health indicators. Agricultural management variables including fertilizer application methods, crop rotations, tillage practices, cover crop adoption, irrigation systems, and historical land-use records were also incorporated. Additionally, satellite-derived vegetation indices such as NDVI and EVI were integrated to capture crop productivity and biomass dynamics.\nFollowing data collection, I developed an ETL pipeline using Python, Pandas, NumPy, GeoPandas, and Apache Spark. Data preprocessing included biologically constrained missing-value imputation, outlier detection, and geospatial normalization procedures.\nThe core modeling framework consisted of a Biologically Informed Neural Network (BINN) that embedded known ecological relationships directly into the model architecture and loss function. The network incorporated modules representing microbial carbon assimilation, decomposition dynamics, nutrient availability, environmental stress responses, and carbon stabilization pathways. Feature engineering generated hundreds of candidate predictors, while recursive feature elimination and SHAP-based analyses identified the most influential variables.\nModel training utilized supervised learning with historical soil carbon observations as target variables. Hyperparameter optimization was performed using Bayesian optimization techniques, and model robustness was evaluated through geographic cross-validation and ensemble modeling approaches.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spring 2026</span>"
     ]
   },
   {
     "objectID": "chapters/11-research-project-2.html#results",
     "href": "chapters/11-research-project-2.html#results",
-    "title": "10  Research Project 2",
+    "title": "10  Spring 2026",
     "section": "10.4 Results",
-    "text": "10.4 Results",
+    "text": "10.4 Results\nThe BINN successfully modeled relationships between agricultural management practices, microbial efficiency metrics, and soil carbon storage outcomes. The framework provided estimates of microbial carbon use efficiency, respiration-to-biomass ratios, nutrient utilization efficiency, and other indicators of microbial performance.\nScenario analyses demonstrated how different fertilizer strategies including synthetic fertilizers, manure amendments, compost systems, and regenerative management approaches affected microbial activity and long-term carbon accumulation. Additional land-use simulations compared conventional row-crop agriculture, no-till systems, cover-cropped fields, agroforestry practices, pasture-based systems, and conservation agriculture approaches.\nInterpretability analyses revealed that soil organic matter content, fertilizer composition, moisture availability, and crop rotation diversity consistently emerged as the strongest predictors of microbial efficiency. Spatial modeling generated county-level soil health forecasts across Pennsylvania and identified regions where alternative management strategies could produce significant improvements in carbon sequestration and soil performance.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spring 2026</span>"
     ]
   },
   {
     "objectID": "chapters/11-research-project-2.html#discussion-conclusion",
     "href": "chapters/11-research-project-2.html#discussion-conclusion",
-    "title": "10  Research Project 2",
+    "title": "10  Spring 2026",
     "section": "10.5 Discussion & Conclusion",
-    "text": "10.5 Discussion & Conclusion",
+    "text": "10.5 Discussion & Conclusion\nBy the conclusion of the project, we had developed a biogeochemically grounded machine learning framework capable of linking agricultural management decisions to underlying soil ecological processes. The integration of microbial efficiency benchmarking, soil carbon modeling, and biologically informed neural networks provided a powerful tool for evaluating sustainable farming practices.\nThe project demonstrated how interpretable artificial intelligence and ecological domain knowledge can be integrated to improve agricultural decision-making. By combining predictive modeling, microbial ecology, and geospatial analysis, the framework generated actionable recommendations for improving soil carbon storage, nutrient retention, and long-term agricultural sustainability across Pennsylvania farming systems. The work highlighted the potential of machine learning to support data-driven environmental management while maintaining scientific interpretability and ecological validity.",
     "crumbs": [
       "Research Projects",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Spring 2026</span>"
     ]
   }
 ]
