@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/index.html</loc>
-    <lastmod>2026-06-12T18:09:10.826Z</lastmod>
+    <lastmod>2026-06-17T17:44:16.368Z</lastmod>
   </url>
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/01-data-wrangling.html</loc>
@@ -35,5 +35,17 @@
   <url>
     <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/08-decision-trees.html</loc>
     <lastmod>2026-06-12T18:08:46.927Z</lastmod>
+  </url>
+  <url>
+    <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/09-research-projects.html</loc>
+    <lastmod>2026-06-17T17:43:39.047Z</lastmod>
+  </url>
+  <url>
+    <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/10-research-project-1.html</loc>
+    <lastmod>2026-06-17T17:43:47.921Z</lastmod>
+  </url>
+  <url>
+    <loc>https://arihaanbarua.github.io/machine-learning-portfolio/chapters/11-research-project-2.html</loc>
+    <lastmod>2026-06-17T17:43:54.831Z</lastmod>
   </url>
 </urlset>

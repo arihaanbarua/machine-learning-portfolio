@@ -14,7 +14,7 @@
     "href": "index.html#whats-inside",
     "title": "Machine Learning Portfolio",
     "section": "What’s inside",
-    "text": "What’s inside\nThe work is grouped into two parts: foundational statistical modeling in R, and machine-learning models built in Python.\n\nPart I — Data Analysis & Regression (R)\nBuilt with R, tidyverse, glmnet, and FNN.\n\n\n\nChapter\nFocus\nKey methods\n\n\n\n\nData Wrangling\nQuerying baseball career records\ndplyr aggregation, grouping & filtering\n\n\nLinear Regression\nInsurance, used cars & housing prices\nNested model comparison, validation metrics (MSE/RMSE/MAE), multiple regression\n\n\nRegularization & kNN\nSalary & housing prediction\nLASSO, backward elimination, k-nearest-neighbors regression\n\n\n\n\n\nPart II — Machine Learning (Python)\nBuilt with Python, scikit-learn, and plotly.\n\n\n\nChapter\nFocus\nKey methods\n\n\n\n\nGaussian Naïve Bayes\nIris classification from scratch\nGaussian likelihoods, Bayes’ theorem, confusion matrix\n\n\nNeural Networks\nDry Bean variety classification\nMLPClassifier, feature scaling, hyperparameter tuning\n\n\nRandom Forests\nGini impurity & feature importance\nDecision trees, MDI vs permutation importance\n\n\nROC & Cross-Validation\nCorporate bankruptcy prediction\nStratified k-fold, ROC/AUC, normalization\n\n\nDecision Trees\nBreast-cancer diagnosis\nEntropy/information gain, hyperparameter effects",
+    "text": "What’s inside\nThe work is grouped into three parts: foundational statistical modeling in R, machine-learning models built in Python, and a collection of independent research projects.\n\nPart I — Data Analysis & Regression (R)\nBuilt with R, tidyverse, glmnet, and FNN.\n\n\n\nChapter\nFocus\nKey methods\n\n\n\n\nData Wrangling\nQuerying baseball career records\ndplyr aggregation, grouping & filtering\n\n\nLinear Regression\nInsurance, used cars & housing prices\nNested model comparison, validation metrics (MSE/RMSE/MAE), multiple regression\n\n\nRegularization & kNN\nSalary & housing prediction\nLASSO, backward elimination, k-nearest-neighbors regression\n\n\n\n\n\nPart II — Machine Learning (Python)\nBuilt with Python, scikit-learn, and plotly.\n\n\n\nChapter\nFocus\nKey methods\n\n\n\n\nGaussian Naïve Bayes\nIris classification from scratch\nGaussian likelihoods, Bayes’ theorem, confusion matrix\n\n\nNeural Networks\nDry Bean variety classification\nMLPClassifier, feature scaling, hyperparameter tuning\n\n\nRandom Forests\nGini impurity & feature importance\nDecision trees, MDI vs permutation importance\n\n\nROC & Cross-Validation\nCorporate bankruptcy prediction\nStratified k-fold, ROC/AUC, normalization\n\n\nDecision Trees\nBreast-cancer diagnosis\nEntropy/information gain, hyperparameter effects\n\n\n\n\n\nPart III — Research Projects\nA collection of independent research projects I conducted throughout the past school year. Unlike the coursework-driven chapters above, these are longer-form, self-directed investigations — each framing its own question, preparing data, applying statistical and machine-learning methods, and writing up the findings.\n\n\n\nProject\nFocus\n\n\n\n\nResearch Project 1\nIndependent research write-up\n\n\nResearch Project 2\nIndependent research write-up",
     "crumbs": [
       "Welcome"
     ]
@@ -312,6 +312,136 @@
     "crumbs": [
       "Machine Learning (Python)",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Decision Trees: Medical Diagnosis</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/09-research-projects.html",
+    "href": "chapters/09-research-projects.html",
+    "title": "Research Projects",
+    "section": "",
+    "text": "Projects\nThis part of the portfolio collects independent research projects I conducted throughout the past school year. Where the earlier chapters work through coursework datasets and standard machine-learning methods, the projects here are longer-form, self-directed investigations — each one framing a question, gathering or preparing data, applying statistical and machine-learning techniques, and writing up the findings.\nUse the sidebar to open either project, or the links above. Each page is a self-contained write-up; you can read them in any order.",
+    "crumbs": [
+      "Research Projects"
+    ]
+  },
+  {
+    "objectID": "chapters/09-research-projects.html#projects",
+    "href": "chapters/09-research-projects.html#projects",
+    "title": "Research Projects",
+    "section": "",
+    "text": "Project\nSummary\n\n\n\n\nResearch Project 1\nWrite-up to be added.\n\n\nResearch Project 2\nWrite-up to be added.",
+    "crumbs": [
+      "Research Projects"
+    ]
+  },
+  {
+    "objectID": "chapters/10-research-project-1.html",
+    "href": "chapters/10-research-project-1.html",
+    "title": "9  Research Project 1",
+    "section": "",
+    "text": "9.1 Abstract\n(Paste a short summary of the project here.)",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-research-project-1.html#background-motivation",
+    "href": "chapters/10-research-project-1.html#background-motivation",
+    "title": "9  Research Project 1",
+    "section": "9.2 Background & Motivation",
+    "text": "9.2 Background & Motivation",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-research-project-1.html#methods",
+    "href": "chapters/10-research-project-1.html#methods",
+    "title": "9  Research Project 1",
+    "section": "9.3 Methods",
+    "text": "9.3 Methods",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-research-project-1.html#results",
+    "href": "chapters/10-research-project-1.html#results",
+    "title": "9  Research Project 1",
+    "section": "9.4 Results",
+    "text": "9.4 Results",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-research-project-1.html#discussion-conclusion",
+    "href": "chapters/10-research-project-1.html#discussion-conclusion",
+    "title": "9  Research Project 1",
+    "section": "9.5 Discussion & Conclusion",
+    "text": "9.5 Discussion & Conclusion",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Research Project 1</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/11-research-project-2.html",
+    "href": "chapters/11-research-project-2.html",
+    "title": "10  Research Project 2",
+    "section": "",
+    "text": "10.1 Abstract\n(Paste a short summary of the project here.)",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/11-research-project-2.html#background-motivation",
+    "href": "chapters/11-research-project-2.html#background-motivation",
+    "title": "10  Research Project 2",
+    "section": "10.2 Background & Motivation",
+    "text": "10.2 Background & Motivation",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/11-research-project-2.html#methods",
+    "href": "chapters/11-research-project-2.html#methods",
+    "title": "10  Research Project 2",
+    "section": "10.3 Methods",
+    "text": "10.3 Methods",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/11-research-project-2.html#results",
+    "href": "chapters/11-research-project-2.html#results",
+    "title": "10  Research Project 2",
+    "section": "10.4 Results",
+    "text": "10.4 Results",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/11-research-project-2.html#discussion-conclusion",
+    "href": "chapters/11-research-project-2.html#discussion-conclusion",
+    "title": "10  Research Project 2",
+    "section": "10.5 Discussion & Conclusion",
+    "text": "10.5 Discussion & Conclusion",
+    "crumbs": [
+      "Research Projects",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Research Project 2</span>"
     ]
   }
 ]
