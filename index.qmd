@@ -4,7 +4,7 @@ This is a portfolio of **statistical modeling and machine-learning projects** bu
 
 ## What's inside
 
-The work is grouped into two parts: foundational statistical modeling in R, and machine-learning models built in Python.
+The work is grouped into three parts: foundational statistical modeling in R, machine-learning models built in Python, and a collection of independent research projects.
 
 ### Part I — Data Analysis & Regression (R)
 
@@ -27,6 +27,15 @@ Built with Python, `scikit-learn`, and `plotly`.
 | [Random Forests](chapters/06-random-forest.qmd) | Gini impurity & feature importance | Decision trees, MDI vs permutation importance |
 | [ROC & Cross-Validation](chapters/07-roc-kfold.qmd) | Corporate bankruptcy prediction | Stratified k-fold, ROC/AUC, normalization |
 | [Decision Trees](chapters/08-decision-trees.qmd) | Breast-cancer diagnosis | Entropy/information gain, hyperparameter effects |
+
+### Part III — Research Projects
+
+A collection of **independent research projects** I conducted throughout the past school year. Unlike the coursework-driven chapters above, these are longer-form, self-directed investigations — each framing its own question, preparing data, applying statistical and machine-learning methods, and writing up the findings.
+
+| Project | Focus |
+|---|---|
+| [Research Project 1](chapters/10-research-project-1.qmd) | Independent research write-up |
+| [Research Project 2](chapters/11-research-project-2.qmd) | Independent research write-up |
 
 ## How to read this portfolio
 

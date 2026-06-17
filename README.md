@@ -18,6 +18,9 @@ A [Quarto book](https://quarto.org/docs/books/) collecting a series of **statist
 - **ROC & Cross-Validation** — corporate bankruptcy prediction with stratified k-fold
 - **Decision Trees** — breast-cancer diagnosis & information gain
 
+### Part III — Research Projects
+- Independent, self-directed research projects conducted throughout the school year, each presented as a longer-form write-up (motivation, methods, results, and conclusions).
+
 ## Project structure
 
 ```
@@ -32,7 +35,10 @@ A [Quarto book](https://quarto.org/docs/books/) collecting a series of **statist
 │   ├── 05-neural-network.qmd
 │   ├── 06-random-forest.qmd
 │   ├── 07-roc-kfold.qmd
-│   └── 08-decision-trees.qmd
+│   ├── 08-decision-trees.qmd
+│   ├── 09-research-projects.qmd    # Part III landing page
+│   ├── 10-research-project-1.qmd
+│   └── 11-research-project-2.qmd
 ├── Files/                 # Datasets + original source notebooks & PDFs
 └── _book/                 # Rendered HTML output (git-ignored)
 ```

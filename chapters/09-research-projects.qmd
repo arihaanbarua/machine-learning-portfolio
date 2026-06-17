@@ -1,0 +1,12 @@
+# Research Projects {.unnumbered}
+
+This part of the portfolio collects **independent research projects** I conducted throughout the past school year. Where the earlier chapters work through coursework datasets and standard machine-learning methods, the projects here are longer-form, self-directed investigations — each one framing a question, gathering or preparing data, applying statistical and machine-learning techniques, and writing up the findings.
+
+## Projects
+
+| Project | Summary |
+|---|---|
+| [Research Project 1](10-research-project-1.qmd) | *Write-up to be added.* |
+| [Research Project 2](11-research-project-2.qmd) | *Write-up to be added.* |
+
+Use the **sidebar** to open either project, or the links above. Each page is a self-contained write-up; you can read them in any order.

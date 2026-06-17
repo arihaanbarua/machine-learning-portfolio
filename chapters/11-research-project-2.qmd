@@ -1,0 +1,47 @@
+# Research Project 2 {#sec-research-project-2}
+
+::: {.callout-note}
+## Project details
+- **Title:** *(add your project title)*
+- **Term:** *(e.g., Spring 2026)*
+- **Collaborators:** *(if any)*
+- **Tools / methods:** *(e.g., R, Python, regression, classification)*
+:::
+
+<!-- ================================================================= -->
+<!--  PASTE YOUR RESEARCH PROJECT WRITE-UP BELOW THIS LINE.            -->
+<!--                                                                   -->
+<!--  Formatting cheatsheet (Markdown):                                -->
+<!--    ## Section heading        ### Subsection heading               -->
+<!--    **bold**   *italics*   `code`                                  -->
+<!--    - bullet list            1. numbered list                      -->
+<!--    [link text](https://url) ![caption](path/to/image.png)         -->
+<!--    > blockquote             | tables | with | pipes |             -->
+<!--                                                                   -->
+<!--  The suggested section headings below are OPTIONAL scaffolding.   -->
+<!--  Delete them, rename them, or paste your own structure instead.   -->
+<!-- ================================================================= -->
+
+## Abstract
+
+*(Paste a short summary of the project here.)*
+
+## Background & Motivation
+
+
+
+## Methods
+
+
+
+## Results
+
+
+
+## Discussion & Conclusion
+
+
+
+<!-- ================================================================= -->
+<!--  END OF WRITE-UP                                                 -->
+<!-- ================================================================= -->

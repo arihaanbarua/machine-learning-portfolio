@@ -29,6 +29,10 @@ book:
         - chapters/06-random-forest.qmd
         - chapters/07-roc-kfold.qmd
         - chapters/08-decision-trees.qmd
+    - part: chapters/09-research-projects.qmd
+      chapters:
+        - chapters/10-research-project-1.qmd
+        - chapters/11-research-project-2.qmd
 
 format:
   html:
