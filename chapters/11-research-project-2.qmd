@@ -1,47 +1,40 @@
-# Research Project 2 {#sec-research-project-2}
-
-::: {.callout-note}
-## Project details
-- **Title:** *(add your project title)*
-- **Term:** *(e.g., Spring 2026)*
-- **Collaborators:** *(if any)*
-- **Tools / methods:** *(e.g., R, Python, regression, classification)*
-:::
-
-<!-- ================================================================= -->
-<!--  PASTE YOUR RESEARCH PROJECT WRITE-UP BELOW THIS LINE.            -->
-<!--                                                                   -->
-<!--  Formatting cheatsheet (Markdown):                                -->
-<!--    ## Section heading        ### Subsection heading               -->
-<!--    **bold**   *italics*   `code`                                  -->
-<!--    - bullet list            1. numbered list                      -->
-<!--    [link text](https://url) ![caption](path/to/image.png)         -->
-<!--    > blockquote             | tables | with | pipes |             -->
-<!--                                                                   -->
-<!--  The suggested section headings below are OPTIONAL scaffolding.   -->
-<!--  Delete them, rename them, or paste your own structure instead.   -->
-<!-- ================================================================= -->
+---
+title: "Spring 2026"
+subtitle: "Machine Learning Analysis of Soil Microbial Efficiency"
+---
 
 ## Abstract
 
-*(Paste a short summary of the project here.)*
+*This research project explored how machine learning could be used to model the relationship between agricultural management practices, soil microbial communities, and long-term soil health outcomes. By integrating soil chemistry, microbial ecology, environmental variables, and land-use information into a Biologically Informed Neural Network (BINN), we developed a predictive framework capable of evaluating soil carbon sequestration, nutrient cycling efficiency, and microbial performance across Pennsylvania agricultural systems. The project aimed to identify sustainable management strategies that improve soil health while maintaining agricultural productivity.*
 
 ## Background & Motivation
 
+Soil microbial communities play a critical role in nutrient cycling, organic matter formation, carbon sequestration, and ecosystem resilience; however, the interactions between management practices, environmental conditions, and microbial processes are highly complex and difficult to model using traditional approaches.
 
+The motivation behind this project was to combine advances in machine learning with established ecological theory to better understand how agricultural decisions influence soil biological processes. Existing soil process models such as CENTURY, RothC, DayCent, and MIMICS provided valuable ecological insights, but often lacked the predictive flexibility of modern machine learning systems. Our goal was to develop a biologically informed framework capable of capturing these complex relationships while maintaining interpretability and ecological feasibility.
 
 ## Methods
 
+The project began with an extensive review of soil carbon cycling literature, microbial carbon use efficiency research, regenerative agriculture studies, and interpretable machine learning methodologies. To support model development, we assembled a large agricultural dataset using USDA soil surveys, Pennsylvania agricultural extension databases, weather archives, remote sensing products, and long-term field experiments.
 
+The dataset included measurements of soil organic carbon, microbial biomass, respiration rates, nutrient availability, moisture content, pH, bulk density, and additional soil health indicators. Agricultural management variables including fertilizer application methods, crop rotations, tillage practices, cover crop adoption, irrigation systems, and historical land-use records were also incorporated. Additionally, satellite-derived vegetation indices such as NDVI and EVI were integrated to capture crop productivity and biomass dynamics.
+
+Following data collection, I developed an ETL pipeline using Python, Pandas, NumPy, GeoPandas, and Apache Spark. Data preprocessing included biologically constrained missing-value imputation, outlier detection, and geospatial normalization procedures.
+
+The core modeling framework consisted of a Biologically Informed Neural Network (BINN) that embedded known ecological relationships directly into the model architecture and loss function. The network incorporated modules representing microbial carbon assimilation, decomposition dynamics, nutrient availability, environmental stress responses, and carbon stabilization pathways. Feature engineering generated hundreds of candidate predictors, while recursive feature elimination and SHAP-based analyses identified the most influential variables.
+
+Model training utilized supervised learning with historical soil carbon observations as target variables. Hyperparameter optimization was performed using Bayesian optimization techniques, and model robustness was evaluated through geographic cross-validation and ensemble modeling approaches.
 
 ## Results
 
+The BINN successfully modeled relationships between agricultural management practices, microbial efficiency metrics, and soil carbon storage outcomes. The framework provided estimates of microbial carbon use efficiency, respiration-to-biomass ratios, nutrient utilization efficiency, and other indicators of microbial performance.
 
+Scenario analyses demonstrated how different fertilizer strategies including synthetic fertilizers, manure amendments, compost systems, and regenerative management approaches affected microbial activity and long-term carbon accumulation. Additional land-use simulations compared conventional row-crop agriculture, no-till systems, cover-cropped fields, agroforestry practices, pasture-based systems, and conservation agriculture approaches.
+
+Interpretability analyses revealed that soil organic matter content, fertilizer composition, moisture availability, and crop rotation diversity consistently emerged as the strongest predictors of microbial efficiency. Spatial modeling generated county-level soil health forecasts across Pennsylvania and identified regions where alternative management strategies could produce significant improvements in carbon sequestration and soil performance.
 
 ## Discussion & Conclusion
 
+By the conclusion of the project, we had developed a biogeochemically grounded machine learning framework capable of linking agricultural management decisions to underlying soil ecological processes. The integration of microbial efficiency benchmarking, soil carbon modeling, and biologically informed neural networks provided a powerful tool for evaluating sustainable farming practices.
 
-
-<!-- ================================================================= -->
-<!--  END OF WRITE-UP                                                 -->
-<!-- ================================================================= -->
+The project demonstrated how interpretable artificial intelligence and ecological domain knowledge can be integrated to improve agricultural decision-making. By combining predictive modeling, microbial ecology, and geospatial analysis, the framework generated actionable recommendations for improving soil carbon storage, nutrient retention, and long-term agricultural sustainability across Pennsylvania farming systems. The work highlighted the potential of machine learning to support data-driven environmental management while maintaining scientific interpretability and ecological validity.

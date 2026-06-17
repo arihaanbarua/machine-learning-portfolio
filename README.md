@@ -19,7 +19,9 @@ A [Quarto book](https://quarto.org/docs/books/) collecting a series of **statist
 - **Decision Trees** — breast-cancer diagnosis & information gain
 
 ### Part III — Research Projects
-- Independent, self-directed research projects conducted throughout the school year, each presented as a longer-form write-up (motivation, methods, results, and conclusions).
+- Independent, collaborative research projects conducted throughout the school year, each presented as a longer-form write-up (motivation, methods, results, and conclusions).
+- **Fall 2025** — Protein Language Models for Specialized Synthetic Structures
+- **Spring 2026** — Machine Learning Analysis of Soil Microbial Efficiency
 
 ## Project structure
 

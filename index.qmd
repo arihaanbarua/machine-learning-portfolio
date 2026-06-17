@@ -4,7 +4,7 @@ This is a portfolio of **statistical modeling and machine-learning projects** bu
 
 ## What's inside
 
-The work is grouped into three parts: foundational statistical modeling in R, machine-learning models built in Python, and a collection of independent research projects.
+The work is grouped into three parts: foundational statistical modeling in R, machine-learning models built in Python, and a collection of research projects.
 
 ### Part I — Data Analysis & Regression (R)
 
@@ -32,10 +32,10 @@ Built with Python, `scikit-learn`, and `plotly`.
 
 A collection of **independent research projects** I conducted throughout the past school year. Unlike the coursework-driven chapters above, these are longer-form, self-directed investigations — each framing its own question, preparing data, applying statistical and machine-learning methods, and writing up the findings.
 
-| Project | Focus |
+| Term | Project |
 |---|---|
-| [Research Project 1](chapters/10-research-project-1.qmd) | Independent research write-up |
-| [Research Project 2](chapters/11-research-project-2.qmd) | Independent research write-up |
+| [Fall 2025](chapters/10-research-project-1.qmd) | Protein Language Models for Specialized Synthetic Structures |
+| [Spring 2026](chapters/11-research-project-2.qmd) | Machine Learning Analysis of Soil Microbial Efficiency |
 
 ## How to read this portfolio
 

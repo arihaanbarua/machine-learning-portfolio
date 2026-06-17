@@ -4,9 +4,9 @@ This part of the portfolio collects **independent research projects** I conducte
 
 ## Projects
 
-| Project | Summary |
+| Term | Project |
 |---|---|
-| [Research Project 1](10-research-project-1.qmd) | *Write-up to be added.* |
-| [Research Project 2](11-research-project-2.qmd) | *Write-up to be added.* |
+| [Fall 2025](10-research-project-1.qmd) | Protein Language Models for Specialized Synthetic Structures |
+| [Spring 2026](11-research-project-2.qmd) | Machine Learning Analysis of Soil Microbial Efficiency |
 
 Use the **sidebar** to open either project, or the links above. Each page is a self-contained write-up; you can read them in any order.

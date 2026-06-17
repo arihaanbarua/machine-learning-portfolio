@@ -1,47 +1,38 @@
-# Research Project 1 {#sec-research-project-1}
-
-::: {.callout-note}
-## Project details
-- **Title:** *(add your project title)*
-- **Term:** *(e.g., Fall 2025)*
-- **Collaborators:** *(if any)*
-- **Tools / methods:** *(e.g., R, Python, regression, classification)*
-:::
-
-<!-- ================================================================= -->
-<!--  PASTE YOUR RESEARCH PROJECT WRITE-UP BELOW THIS LINE.            -->
-<!--                                                                   -->
-<!--  Formatting cheatsheet (Markdown):                                -->
-<!--    ## Section heading        ### Subsection heading               -->
-<!--    **bold**   *italics*   `code`                                  -->
-<!--    - bullet list            1. numbered list                      -->
-<!--    [link text](https://url) ![caption](path/to/image.png)         -->
-<!--    > blockquote             | tables | with | pipes |             -->
-<!--                                                                   -->
-<!--  The suggested section headings below are OPTIONAL scaffolding.   -->
-<!--  Delete them, rename them, or paste your own structure instead.   -->
-<!-- ================================================================= -->
+---
+title: "Fall 2025"
+subtitle: "Protein Language Models for Specialized Synthetic Structures"
+---
 
 ## Abstract
 
-*(Paste a short summary of the project here.)*
+*This research project explored whether large-scale protein language models could identify relationships between protein sequence, structural stability, and pathological misfolding, and whether those relationships could be leveraged to generate novel synthetic protein structures computationally. By combining transformer-based deep learning, structural bioinformatics, and systems biology simulations, our team developed a framework capable of generating and evaluating hypothetical proteins. Using Penn State's ROAR supercomputing infrastructure and the Johns Hopkins Virtual Cell environment, we investigated the feasibility of designing synthetic prion-like proteins capable of initiating targeted misfolding cascades associated with apoptotic pathways in cancerous glial cells responsible for many types of brain cancer.*
 
 ## Background & Motivation
 
+Protein misfolding plays a central role in numerous biological processes and diseases, yet the mechanisms connecting protein sequence to structural behavior remain difficult to characterize. Recent advances in protein language models have demonstrated that transformer architectures can learn biologically meaningful representations directly from amino acid sequences, enabling new approaches to protein structure prediction and generative protein design.
 
+The motivation behind this project was to investigate whether these models could be applied to identify sequence patterns associated with controlled misfolding behavior and generate novel protein candidates with specific functional properties. As a proof-of-concept objective, we focused on computationally designing proteins capable of initiating targeted misfolding cascades associated with apoptotic signaling pathways in cancerous glial cells. The project aimed to integrate machine learning, structural biology, and mechanistic cellular simulations into a unified framework for computational therapeutic discovery.
 
 ## Methods
 
+The project began with the construction of a comprehensive protein sequence database using UniProt, the Protein Data Bank (PDB), AlphaFold Database, InterPro, Pfam, and additional repositories containing information on protein aggregation and conformational disorders. After preprocessing and quality control, the data were enriched with evolutionary conservation metrics, multiple sequence alignments, residue-level annotations, secondary structure predictions, solvent accessibility estimates, and protein family classifications.
 
+Using this dataset, we developed a transformer-based protein language model utilizing masked language modeling objectives. The model was implemented using PyTorch, DeepSpeed, distributed data parallel training, multi-head self-attention mechanisms, rotary positional embeddings, mixed-precision training, and Bayesian hyperparameter optimization. Training and experimentation were conducted using Penn State's ROAR computing infrastructure.
+
+Following pretraining, the model was fine-tuned on datasets related to protein folding and aggregation. Generated sequence embeddings were integrated with downstream structure prediction systems to estimate three-dimensional conformations and energetic stability profiles. Generative sampling methods, including beam search, top-k sampling, nucleus sampling, and constrained sequence generation, were then used to produce hypothetical protein candidates.
+
+Candidate proteins underwent extensive in silico screening using folding confidence metrics, aggregation propensity analysis, intrinsic disorder prediction, stability assessments, conservation analysis, and off-target interaction evaluation. Finally, promising candidates were imported into the Johns Hopkins Virtual Cell environment, where thousands of simulations were performed to evaluate hypothetical cellular responses, signaling interactions, and apoptosis-related pathways.
 
 ## Results
 
+The resulting framework successfully learned biologically meaningful protein representations and generated structurally plausible protein candidates. Fine-tuning on folding and aggregation datasets improved the model's ability to recognize structural patterns associated with misfolding behavior and disease-relevant protein interactions.
 
+Virtual Cell simulations demonstrated that several generated protein candidates exhibited the desired theoretical characteristics within computational models, including interactions associated with protein stress responses, cellular damage detection pathways, and apoptosis-related signaling networks. Extensive benchmarking against published datasets showed competitive performance across multiple evaluation metrics, including ROC-AUC, PR-AUC, contact prediction accuracy, structural similarity measures, and embedding quality assessments.
+
+Interpretability analyses using SHAP values, integrated gradients, saliency mapping, UMAP visualizations, and clustering techniques identified key sequence features influencing model predictions and provided biological insight into the generated protein structures.
 
 ## Discussion & Conclusion
 
+By the conclusion of the project, our team had developed an end-to-end computational platform capable of learning protein representations from large biological datasets, generating novel hypothetical protein sequences, evaluating structural plausibility, simulating biological interactions, and quantifying predictive uncertainty.
 
-
-<!-- ================================================================= -->
-<!--  END OF WRITE-UP                                                 -->
-<!-- ================================================================= -->
+Although the work remained entirely in silico, successful validation within the Johns Hopkins Virtual Cell environment demonstrated the theoretical feasibility of using modern protein language models to generate highly specialized synthetic protein structures and accurately model their behavior within complex cellular systems. Most importantly, the results supported the central hypothesis that protein language models could be leveraged to design synthetic prion-like protein candidates capable of initiating targeted misfolding cascades and producing apoptosis-related responses within computational simulations. The project illustrated how advances in artificial intelligence, structural bioinformatics, and systems biology can be integrated into a unified framework for computational therapeutic discovery and next-generation protein engineering research.
